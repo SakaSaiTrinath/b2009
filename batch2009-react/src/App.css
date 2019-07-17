@@ -1,0 +1,10 @@
+.editorContainer {
+  padding: 0px;
+  margin-top: 15px;
+}
+
+.editors {
+  border: 1px #DEDEDF solid;
+  padding: 1em;
+  border-radius: 3px;
+}

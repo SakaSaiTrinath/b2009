@@ -1,0 +1,54 @@
+Need to add:
+
+At Last 1. In settings:
+	Done			change password,
+	Done Partially	security settings (still need to think)
+	Done			Add privacy things for every tab in MyProfile page.
+
+At Last 2. Introductory pages which asks the user data. (these are only visible when user's first time visit).
+
+At Last	3. Need to develop Dashboard
+
+Done	4.In announcements page, 
+		On Clicking Read more should extend the announcement or display in a modal or display in next tab.
+
+	4.1 In Article,
+Done		remove "giving rating by user", simply show rating. User can only give rating after 		reading the article that is it should be in ArticlePage.
+
+	5. Status page,
+Done in someway		a) Make the search work along with filtering. That is setting up the filter and 						searching somebody should display that card only.
+
+		b) Clicking on any card should display their selected one's profile page with thier info.
+
+Done	c) add options or tabs which shows "members joined the website", "members yet to join".
+
+	6. In feed page, 
+
+			By default, the feed page shows the most recent article which is published then the next and on.
+
+Done		a) add rating system
+
+Done		b) add Read more thing and make it work.
+
+		c) add search (any keyowrds which match with the title of articles) and filter (by author, by tag, by date) to search for the articles.
+
+	7. In My profile page.
+
+		a) Make upload profile pic, and upload to gallery work.
+
+		b) In AfterNavodaya tab, make deletions work and add update button at the bottom.
+
+Done	c) add "Suggestion topics link" and finalize any 10 basic things to keep and left adding others to users.
+
+Done	d) add "Suggestion questions link" and finalize any 10 basic things to keep and left adding others to 				users.
+
+	8. In Site Gallery, add folders to store category of images.
+
+Partially Done		a) Make availability Creating folders, adding images to it.
+
+		b) Don't include deletion of pics or folders. (At start).
+
+	Extra thing:
+		Add rules, terms and conditions somewhere
+
+
