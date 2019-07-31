@@ -14,7 +14,7 @@ class EditSchoolInfoForm extends Component {
 		},
 		errors: this.props.errors,
 		loading: this.props.loading
-	};
+	}; 
 
 	componentDidMount = () => {
 		this.props.updateState(this.state.data);

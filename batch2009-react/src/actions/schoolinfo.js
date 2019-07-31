@@ -22,3 +22,13 @@ export const updateSchoolInfo = data => dispatch =>
 	api.user.updateSchoolInfo(data).then(school_info => {
 		dispatch(SchoolInfoUpdated(school_info));
 	});
+
+export const addNewGame = data => dispatch =>
+	api.user.addNewGame(data).then(school_info => {
+		dispatch(SchoolInfoUpdated(school_info));
+	});
+
+export const deleteGame = doc => dispatch =>
+	api.user.deleteGame(doc).then(school_info => {
+		dispatch(SchoolInfoUpdated(school_info));
+	});

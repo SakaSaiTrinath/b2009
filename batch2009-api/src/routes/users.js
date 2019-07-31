@@ -5,6 +5,7 @@ import authenticate from "../middlewares/authenticate";
 
 const router = express.Router();
 
+// Basic info
 router.get("/fetchBasicInfo", authenticate, (req, res) => {
 	const { sessionId } = req.currentUser;
 	User.findOne({ sessionId }).then(user => {
@@ -124,6 +125,7 @@ router.post("/updateStatus", authenticate, (req, res) => {
 	});
 });
 
+// School info
 router.get("/fetchSchoolInfo", authenticate, (req, res) => {
 	const { sessionId } = req.currentUser;
 	User.findOne({ sessionId }).then(user => {
@@ -169,6 +171,48 @@ router.post("/updateSchoolInfo", authenticate, (req, res) => {
 	});
 });
 
+router.post("/addNewGame", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ $push: { games: req.body.data } }
+	).then(user => {
+		const games = user.games;
+		games.push(req.body.data);
+		res.json({ 
+			school_info: {
+				studied_from_year: user.studied_from_year,
+				studied_to_year: user.studied_to_year,
+				junior_house: user.junior_house,
+				senior_house: user.senior_house,
+				games: games
+			} 
+		});
+	});
+});
+
+router.post("/deleteGame", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const del_game = req.body.doc;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ $pull: { games: del_game } }
+	).then(user => {
+		let games = user.games;
+		games = games.filter(it => it._id != del_game._id);
+		res.json({ 
+			school_info: {
+				studied_from_year: user.studied_from_year,
+				studied_to_year: user.studied_to_year,
+				junior_house: user.junior_house,
+				senior_house: user.senior_house,
+				games: games
+			} 
+		});
+	});
+});
+
+// AfterNavodaya info
 router.get("/fetchAfterNavodayaInfo", authenticate, (req, res) => {
 	const { sessionId } = req.currentUser;
 	User.findOne({ sessionId }).then(user => {
@@ -180,6 +224,41 @@ router.get("/fetchAfterNavodayaInfo", authenticate, (req, res) => {
 	});
 });
 
+router.post("/addNewAN", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const doc = req.body.data;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ "$push": { after_navodaya: doc } }
+	).then(user => {
+		const docs = user.after_navodaya;
+		docs.push(doc);
+		res.json({
+			after_navodaya: {
+				after_navodaya: docs
+			}
+		});
+	});
+});
+
+router.post("/deleteAN", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const doc = req.body.data;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ "$pull": { after_navodaya: doc } }
+	).then(user => {
+		let docs = user.after_navodaya;
+		docs = docs.filter(it => it._id != doc._id);
+		res.json({
+			after_navodaya: {
+				after_navodaya: docs
+			}
+		});
+	});
+});
+
+// Social Accounts info
 router.get("/fetchSocialAccInfo", authenticate, (req, res) => {
 	const { sessionId } = req.currentUser;
 	User.findOne({ sessionId }).then(user => {
@@ -191,6 +270,7 @@ router.get("/fetchSocialAccInfo", authenticate, (req, res) => {
 	});
 });
 
+// Favourites info
 router.get("/fetchFavouritesInfo", authenticate, (req, res) => {
 	const { sessionId } = req.currentUser;
 	User.findOne({ sessionId }).then(user => {
@@ -202,6 +282,7 @@ router.get("/fetchFavouritesInfo", authenticate, (req, res) => {
 	});
 });
 
+// Firstthings info
 router.get("/fetchFirstThingsInfo", authenticate, (req, res) => {
 	const { sessionId } = req.currentUser;
 	User.findOne({ sessionId }).then(user => {

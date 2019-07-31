@@ -1,11 +1,11 @@
 import React from "react";
-import { Table, Button, Icon } from "semantic-ui-react";
+import { Table, Button, Icon, Popup } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import EditSchoolInfo from "../modals/EditSchoolInfo";
 import AddNewGames from "../modals/AddNewGames";
 
-import { fetchSchoolInfo } from "../../actions/schoolinfo";
+import { fetchSchoolInfo, deleteGame } from "../../actions/schoolinfo";
 
 class SchoolInfoPanel extends React.Component {
 	state = { 
@@ -16,14 +16,22 @@ class SchoolInfoPanel extends React.Component {
 		this.props.fetchSchoolInfo();	
 	};
 
+	componentDidUpdate = (prevProps, prevState) => {
+		if(this.props.games !== prevProps.games) {
+			this.setState({
+				gameData: this.props.games
+			});
+		}	
+	}
+
 	deleteItem = id => {
-		const { gameData } = this.state;
-		gameData.splice(id, 1);
-		this.setState({ gameData });
+		this.props.deleteGame(id);
 	};
 
 	GameIconFinder = game => {
 		switch (game) {
+			case "Athletics":
+				return "flag checkered";
 			case "Volleyball":
 				return "volleyball ball";
 			case "Kabaddi":
@@ -119,26 +127,31 @@ class SchoolInfoPanel extends React.Component {
 						{
 							this.state.gameData.length > 0 ? 
 								this.state.gameData.map((game, i) => {
-									const name = game.Game;
+									const name = game.game_name;
 									return (
-										<Table.Row key={game.id}>
+										<Table.Row key={game._id}>
 											<Table.Cell>
 												<Icon
 													name={this.GameIconFinder(name)}
 													color="teal"
 												/>
-												{game.Game}
+												{game.game_name}
 											</Table.Cell>
-											<Table.Cell>{game.LevelReached}</Table.Cell>
+											<Table.Cell>{game.level_reached}</Table.Cell>
 											<Table.Cell>
-												{game.NumberOfTimes}
+												{game.no_of_reached}
 											</Table.Cell>
 											<Table.Cell collapsing textAlign="right">
-												<Button
-													size="mini"
-													icon="close"
-													onClick={() => this.deleteItem(i)}
-												/>
+												<Popup 
+													inverted
+													content='Delete cell' 
+													trigger={
+														<Button
+															size="mini"
+															icon="close"
+															onClick={() => this.deleteItem(game)}
+														/>
+													} />
 											</Table.Cell>
 										</Table.Row>
 									);
@@ -165,4 +178,4 @@ function mapStateToProps(state) {
 	}
 }
 
-export default connect(mapStateToProps, { fetchSchoolInfo })(SchoolInfoPanel);
+export default connect(mapStateToProps, { fetchSchoolInfo, deleteGame })(SchoolInfoPanel);

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import AddNewAfterNavodaya from "../modals/AddNewAfterNavodaya";
 import Visibility from "../modals/Visibility";
 
-import { fetchAfterNavodayaInfo } from "../../actions/afternavodayainfo";
+import { fetchAfterNavodayaInfo, deleteAN } from "../../actions/afternavodayainfo";
 
 class AfterNavodayaPanel extends React.Component {
 	state = {
@@ -14,6 +14,18 @@ class AfterNavodayaPanel extends React.Component {
 
 	componentDidMount = () => {
 		this.props.fetchAfterNavodayaInfo();
+	};
+
+	componentDidUpdate = (prevProps, prevState) => {
+		if(this.props.after_navodaya !== prevProps.after_navodaya) {
+			this.setState({
+				after_navodaya: this.props.after_navodaya 
+			});
+		}		
+	};
+
+	deleteCard = doc => {
+		this.props.deleteAN(doc);
 	}
 
 	render() {
@@ -38,35 +50,9 @@ class AfterNavodayaPanel extends React.Component {
 					</div>
 				}
 				
-				{/* <Card.Group centered>
-					<Card color="teal">
-						<Card.Content>
-							<Card.Header>
-								B.Tech Computer Science
-								{
-									// It should display for the profile user only.
-									// Other user viewing another user's profile should not get this.
-									<Popup
-										trigger={
-											<Label attached="top right" as="a">
-												<Icon name="delete" />
-											</Label>
-										}
-										content="Delete this card"
-									/>
-								}
-							</Card.Header>
-							<Card.Meta>2016 - Present</Card.Meta>
-							<Card.Description>
-								Lovely Professional University, Punjab, India.
-							</Card.Description>
-						</Card.Content>
-					</Card>
-				</Card.Group> */}
-				
 				{ after_navodaya.length > 0 ? 
 					after_navodaya.map(doc => (
-						<Card.Group centered>
+						<Card.Group centered key={doc._id}>
 							<Card color="teal">
 								<Card.Content>
 									<Card.Header>
@@ -77,7 +63,7 @@ class AfterNavodayaPanel extends React.Component {
 
 											<Popup
 												trigger={
-													<Label attached="top right" as="a">
+													<Label attached="top right" as="a" onClick={() => this.deleteCard(doc)}>
 														<Icon name="delete" />
 													</Label>
 												}
@@ -85,7 +71,7 @@ class AfterNavodayaPanel extends React.Component {
 											/>
 										}
 									</Card.Header>
-									<Card.Meta>{doc.sub_title}</Card.Meta>
+									<Card.Meta>{doc.duration}</Card.Meta>
 									<Card.Description>
 										{doc.content}
 									</Card.Description>
@@ -113,4 +99,4 @@ function mapStateToProps(state) {
 	}
 }
 
-export default connect(mapStateToProps, { fetchAfterNavodayaInfo })(AfterNavodayaPanel);
+export default connect(mapStateToProps, { fetchAfterNavodayaInfo, deleteAN })(AfterNavodayaPanel);

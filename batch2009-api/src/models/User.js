@@ -8,7 +8,7 @@ const schema = new mongoose.Schema({
 	joined: { type: Boolean, default: false },
 	
 	// basic info
-	profile_pic: { type: Buffer },
+	profile_pic: { type: String },
 	fullname: { type: String, required: true },
 	current_status: { type: String, default: '---' },
 	nick_name: { type: String, default: '---' },
@@ -33,7 +33,7 @@ const schema = new mongoose.Schema({
 	games: [{ game_name: String, level_reached: String, no_of_reached: String }],
 	
 	// afternvavodaya
-	after_navodaya: [{ title: String, sub_title: String, content: String }],
+	after_navodaya: [{ title: String, duration: String, content: String }],
 	after_navodaya_rejected_list: [String],
 	
 	// social aacounts
