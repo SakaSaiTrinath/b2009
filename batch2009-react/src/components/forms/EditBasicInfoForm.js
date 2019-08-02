@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from "react"; 
 import { Form } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import { connect } from "react-redux";

@@ -1,4 +1,7 @@
-import { FETCH_SOCIAL_ACC_INFO } from "../types";
+import { 
+	FETCH_SOCIAL_ACC_INFO, 
+	UPDATE_SOCIAL_ACC_INFO 
+} from "../types";
 import api from "../api";
 
 export const SocialAccInfoFetched = social_acc => ({
@@ -6,7 +9,18 @@ export const SocialAccInfoFetched = social_acc => ({
 	social_acc
 });
 
+export const SocialAccInfoUpdated = social_acc => ({
+	type: UPDATE_SOCIAL_ACC_INFO,
+	social_acc
+});
+
+//============================================================
 export const fetchSocialAccInfo = () => dispatch =>
 	api.user.fetchSocialAccInfo().then(social_acc => {
 		dispatch(SocialAccInfoFetched(social_acc));
+	});
+
+export const updateSocialAccInfo = data => dispatch =>
+	api.user.updateSocialAccInfo(data).then(social_acc => {
+		dispatch(SocialAccInfoUpdated(social_acc));
 	});

@@ -11,7 +11,14 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 
-mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true });
+mongoose.connect(
+	process.env.MONGODB_URL, 
+	{ 
+		useNewUrlParser: true,
+		useFindAndModify: false,
+		useCreateIndex: true
+	}
+);
 
 app.use("/api/auth", auth);
 app.use("/api/users", users);

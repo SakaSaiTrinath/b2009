@@ -34,7 +34,8 @@ export default {
 		// Social info
 		fetchSocialAccInfo: () =>
 			axios.get("/api/users/fetchSocialAccInfo").then(res => res.data.social_acc),
-
+		updateSocialAccInfo: data =>
+			axios.post("/api/users/updateSocialAccInfo", { data }).then(res => res.data.social_acc),
 
 		// Favourites info
 		fetchFavouritesInfo: () =>

@@ -28,7 +28,6 @@ class SocialAccountsPanel extends React.Component {
 			facebook, 
 			whatsapp, 
 			twitter, 
-			google_plus, 
 			instagram,
 			linkedin,
 			youtube,
@@ -56,6 +55,13 @@ class SocialAccountsPanel extends React.Component {
 						</div>
 					}
 					<Table striped celled>
+						<Table.Header>
+							<Table.Row>
+								<Table.HeaderCell>Account</Table.HeaderCell>
+								<Table.HeaderCell>Username/Id</Table.HeaderCell>
+								<Table.HeaderCell>Link</Table.HeaderCell>
+							</Table.Row>
+						</Table.Header>
 						<Table.Body>
 							<Table.Row>
 								<Table.Cell>
@@ -85,8 +91,7 @@ class SocialAccountsPanel extends React.Component {
 										content="WhatsApp"
 									/>
 								</Table.Cell>
-								<Table.Cell>{/*9866153176*/whatsapp&&whatsapp.number}</Table.Cell>
-								<Table.Cell>{/*9866153176*/whatsapp&&whatsapp.number}</Table.Cell>
+								<Table.Cell colSpan="2">{/*9815188987*/whatsapp&&whatsapp.number}</Table.Cell>
 							</Table.Row>
 							<Table.Row>
 								<Table.Cell>
@@ -113,34 +118,11 @@ class SocialAccountsPanel extends React.Component {
 									<Button
 										color="yellow"
 										icon="mail"
-										content="Gmail"
+										content="Email"
 									/>
 								</Table.Cell>
-								<Table.Cell>{/*sst.trinath@gmail.com*/email&&email.mail_address}</Table.Cell>
-								<Table.Cell>{/*sst.trinath@gmail.com*/email&&email.mail_address}</Table.Cell>
+								<Table.Cell colSpan="2">{/*sst.trinath@gmail.com*/email&&email.mail_address}</Table.Cell>
 							</Table.Row>
-
-							<Table.Row>
-								<Table.Cell>
-									<Button
-										color="google plus"
-										icon="google plus"
-										content="Google Plus"
-									/>
-								</Table.Cell>
-								<Table.Cell>{/*Sai Trinath Saka*/google_plus&&google_plus.username}</Table.Cell>
-								<Table.Cell selectable>
-									<a
-										// href="https://plus.google.com/101044252818501620910"
-										href={google_plus&&google_plus.url}
-										target="_blank"
-										rel="noreferrer noopener"
-									>
-										{/*https://plus.google.com/101044252818501620910*/google_plus&&google_plus.url}
-									</a>
-								</Table.Cell>
-							</Table.Row>
-
 							<Table.Row>
 								<Table.Cell>
 									<Button
@@ -266,17 +248,6 @@ class SocialAccountsPanel extends React.Component {
 					<Divider />
 					<Button color="yellow" icon="mail" circular />
 					<a> {/*sst.trinath@gmail.com*/email&&email.mail_address}</a>
-					<Divider />
-					<Button circular color="google plus" icon="google plus" />
-					<a
-						// href="https://plus.google.com/101044252818501620910"
-						href={google_plus&&google_plus.url}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						{" "}
-						{/*Sai Trinath Saka*/google_plus&&google_plus.username}
-					</a>
 					<Divider />
 					<Button color="instagram" icon="instagram" circular />
 					<a> {/*saitrinathsaka*/instagram&&instagram.username} </a>

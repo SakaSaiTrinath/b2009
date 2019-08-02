@@ -53,10 +53,6 @@ const schema = new mongoose.Schema({
 		email: {
 			mail_address: { type: String, default: "---"}
 		},
-		google_plus: {
-			username: { type: String, default: "---"},
-			url: { type: String, default: "---"}
-		},
 		instagram: {
 			username: { type: String, default: "---"}
 		},

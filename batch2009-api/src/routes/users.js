@@ -270,6 +270,21 @@ router.get("/fetchSocialAccInfo", authenticate, (req, res) => {
 	});
 });
 
+router.post("/updateSocialAccInfo", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const data = req.body.data;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ social_accounts: data }
+	).then(user => {
+		res.json({
+			social_acc: {
+				social_accounts: data
+			}
+		});
+	});
+});
+
 // Favourites info
 router.get("/fetchFavouritesInfo", authenticate, (req, res) => {
 	const { sessionId } = req.currentUser;
