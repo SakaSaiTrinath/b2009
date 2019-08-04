@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import EditFavourites from "../modals/EditFavourites";
 import Visibility from "../modals/Visibility";
 
-import { fetchFavouritesInfo } from "../../actions/favouritesinfo";
+import { fetchFavouritesInfo, deleteFavField } from "../../actions/favouritesinfo";
 
 /* const favQue = [
 	{
@@ -59,10 +59,6 @@ class FavouritesPanel extends React.Component {
 		favList: this.props.favourites
 	};
 
-	/* ShowSuggestionPage = () => {
-		return <NeedSuggestions />;
-	}; */
-
 	componentDidMount = () => {
 		this.props.fetchFavouritesInfo();
 	};
@@ -72,6 +68,10 @@ class FavouritesPanel extends React.Component {
 			this.setState({ favList: this.props.favourites });
 		}
 	};
+
+	deleteField = data => {
+		this.props.deleteFavField(data);
+	}
 
 	render() {
 		const { favList } = this.state;
@@ -112,6 +112,9 @@ class FavouritesPanel extends React.Component {
 								{fq.field}
 							</Segment>
 							<Segment>{fq.value}</Segment>
+							<Label as='a' onClick={() => this.deleteField(fq)}>
+								<Icon name="delete" />
+					        </Label>
 						</Segment.Group>
 					)) : (
 						<Segment>
@@ -131,4 +134,4 @@ function mapStateToProps(state) {
 	}
 }
 
-export default connect(mapStateToProps, { fetchFavouritesInfo })(FavouritesPanel);
+export default connect(mapStateToProps, { fetchFavouritesInfo, deleteFavField })(FavouritesPanel);

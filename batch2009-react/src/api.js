@@ -40,9 +40,17 @@ export default {
 		// Favourites info
 		fetchFavouritesInfo: () =>
 			axios.get("/api/users/fetchFavouritesInfo").then(res => res.data.favourites),
+		updateFavouritesInfo: data =>
+			axios.post("/api/users/updateFavouritesInfo", { data }).then(res => res.data.favourites),
+		addNewFieldInFavourites: data =>
+			axios.post("/api/users/addNewFieldInFavourites", { data }).then(res => res.data.favourites),
+		deleteFavField: data =>
+			axios.post("/api/users/deleteFavField", { data }).then(res => res.data.favourites),
 
 		// Firstthings info
 		fetchFirstThingsInfo: () =>
-			axios.get("/api/users/fetchFirstThingsInfo").then(res => res.data.firstthings)
+			axios.get("/api/users/fetchFirstThingsInfo").then(res => res.data.firstthings),
+		addNewFieldInFirstThings: data =>
+			axios.post("/api/users/addNewFieldInFirstThings", { data }).then(res => res.data.firstthings)
 	}
 }

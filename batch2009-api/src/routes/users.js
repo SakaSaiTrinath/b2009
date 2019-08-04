@@ -297,6 +297,55 @@ router.get("/fetchFavouritesInfo", authenticate, (req, res) => {
 	});
 });
 
+router.post("/updateFavouritesInfo", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const { data } = req.body;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ favourites: data }
+	).then(user => {
+		res.json({
+			favourites: {
+				favourites: data
+			}
+		});
+	});
+});
+
+router.post("/addNewFieldInFavourites", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const { data } = req.body;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ "$push": { favourites: data } }
+	).then(user => {
+		const docs = user.favourites;
+		docs.push(data);
+		res.json({
+			favourites: {
+				favourites: docs
+			}
+		});
+	});
+});
+
+router.post("/deleteFavField", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const { data } = req.body;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ "$pull": { favourites: data } }
+	).then(user => {
+		let docs = user.favourites;
+		docs = docs.filter(it => it._id != data._id);
+		res.json({
+			favourites: {
+				favourites: docs
+			}
+		});
+	});
+});
+
 // Firstthings info
 router.get("/fetchFirstThingsInfo", authenticate, (req, res) => {
 	const { sessionId } = req.currentUser;
