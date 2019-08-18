@@ -11,6 +11,11 @@ const schema = new mongoose.Schema({
 	profile_pic: { type: String },
 	fullname: { type: String, required: true },
 	current_status: { type: String, default: '---' },
+	current_location: {
+		country: { type: String, default: '---' },
+		state: { type: String, default: '---' },
+		city: { type: String, default: '---' }
+	},
 	nick_name: { type: String, default: '---' },
 	birthdate: { type: Number, default: 1 },
 	birthmonth: { type: String, default: 1 },

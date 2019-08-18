@@ -7,6 +7,8 @@ import afternavodayainfo from "./reducers/afternavodayainfo";
 import socialaccinfo from "./reducers/socialaccinfo";
 import favouritesinfo from "./reducers/favouritesinfo";
 import firstthingsinfo from "./reducers/firstthingsinfo";
+import locations from "./reducers/locations";
+
 
 export default combineReducers({
 	user,
@@ -15,6 +17,7 @@ export default combineReducers({
 	afternavodayainfo,
 	socialaccinfo,
 	favouritesinfo,
-	firstthingsinfo
+	firstthingsinfo,
+	locations
 });
 

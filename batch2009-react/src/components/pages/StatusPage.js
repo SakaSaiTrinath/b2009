@@ -266,7 +266,7 @@ class StatusPage extends React.Component {
 												marginBottom: "10px"
 											}}
 											as={Link}
-											to="/myprofile#"
+											to="/profile#"
 										>
 											<Card.Content>
 												<Image

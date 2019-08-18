@@ -53,6 +53,7 @@ router.post("/uploadProfilePic", authenticate, (req, res) => {
 						fullname: user.fullname,
 						profile_pic: imagePath,
 						current_status: user.current_status,
+						current_location: user.current_location,
 						articles_count: user.articles_count,
 						gallery_count: user.gallery_count,
 						nick_name: user.nick_name,
@@ -85,6 +86,7 @@ router.get("/fetchBasicInfo", authenticate, (req, res) => {
 				fullname: user.fullname,
 				profile_pic: user.profile_pic,
 				current_status: user.current_status,
+				current_location: user.current_location,
 				articles_count: user.articles_count,
 				gallery_count: user.gallery_count,
 				nick_name: user.nick_name,
@@ -145,6 +147,7 @@ router.post("/updateBasicInfo", authenticate, (req, res) => {
 				fullname: user.fullname,
 				profile_pic: user.profile_pic,
 				current_status: user.current_status,
+				current_location: user.current_location,
 				articles_count: user.articles_count,
 				gallery_count: user.gallery_count,
 				birthmonth,
@@ -167,12 +170,13 @@ router.post("/updateBasicInfo", authenticate, (req, res) => {
 
 router.post("/updateStatus", authenticate, (req, res) => {
 	const { sessionId } = req.currentUser;
-	const { status } = req.body;
+	const { status, current_location } = req.body.data;
 	
 	User.findOneAndUpdate(
 		{ sessionId },
 		{
-			current_status: status
+			current_status: status,
+			current_location
 		}
 	).then(user => {
 		res.json({ 
@@ -180,6 +184,7 @@ router.post("/updateStatus", authenticate, (req, res) => {
 				fullname: user.fullname,
 				profile_pic: user.profile_pic,
 				current_status: status,
+				current_location: current_location,
 				articles_count: user.articles_count,
 				gallery_count: user.gallery_count,
 				nick_name: user.nick_name,

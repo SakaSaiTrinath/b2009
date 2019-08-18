@@ -22,8 +22,8 @@ export const updateBasicInfo = data => dispatch =>
 		dispatch(BasicInfoUpdated(basic_info));
 	});
 
-export const updateStatus = status => dispatch =>
-	api.user.updateStatus(status).then(basic_info => {
+export const updateStatus = data => dispatch =>
+	api.user.updateStatus(data).then(basic_info => {
 		dispatch(BasicInfoUpdated(basic_info));
 	});
 

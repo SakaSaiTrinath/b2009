@@ -16,8 +16,8 @@ export default {
 			axios.get("/api/users/fetchBasicInfo").then(res => res.data.basic_info),
 		updateBasicInfo: data =>
 			axios.post("/api/users/updateBasicInfo", { data }).then(res => res.data.basic_info),
-		updateStatus: status =>
-			axios.post("/api/users/updateStatus", { status }).then(res => res.data.basic_info),
+		updateStatus: data =>
+			axios.post("/api/users/updateStatus", { data }).then(res => res.data.basic_info),
 		uploadProfilePic: formData =>
 			axios.post("/api/users/uploadProfilePic", formData, config).then(res => res.data.basic_info),
 
@@ -64,5 +64,13 @@ export default {
 			axios.post("/api/users/addNewFieldInFirstThings", { data }).then(res => res.data.firstthings),
 		deleteFTField: data =>
 			axios.post("/api/users/deleteFTField", { data }).then(res => res.data.firstthings),
+	},
+	locations: {
+		fetchCountries: () =>
+			axios.post("/api/locations/countries").then(res => res.data.countries),
+		fetchStates: country => 
+			axios.post("/api/locations/states/"+country).then(res => res.data.states),
+		fetchCities: (country, state) =>
+			axios.post("/api/locations/cities/"+country+"/"+state).then(res => res.data.cities)
 	}
 }

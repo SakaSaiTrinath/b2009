@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 import auth from "./routes/auth";
 import users from "./routes/users";
+import locations from "./routes/locations";
 
 dotenv.config();
 const app = express();
@@ -22,6 +23,7 @@ mongoose.connect(
 
 app.use("/api/auth", auth);
 app.use("/api/users", users);
+app.use("/api/locations", locations);
 
 app.get("/", (req, res) => {
 	res.sendFile(path.join(__dirname, "index.html"));

@@ -7,18 +7,25 @@ import { updateStatus } from "../../actions/basicinfo";
 
 class EditStatus extends React.Component {
 	state = {
-		status: "",
+		data: {
+			status: "",
+			location: {
+				country: "",
+				state: "",
+				city: ""
+			}
+		},
 		errors: "",
 		modalOpen: false
 	};
 
-	updateState = status => {
-		this.setState({ status });
+	updateState = data => {
+		this.setState({ data });
 	};
 
 	onSubmit = e => {
 		e.preventDefault();
-		const errors = this.validate(this.state.status);
+		const errors = this.validate(this.state.data);
 		this.setState({
 			errors
 		});
@@ -26,7 +33,7 @@ class EditStatus extends React.Component {
 			// alert(`Username: ${this.state.data.username}, Password: ${this.state.data.password}`);
 			this.setState({ loading: true });
 			this.props
-				.updateStatus(this.state.status)
+				.updateStatus(this.state.data)
 				.then(() => {
 					this.setState({ loading: false, modalOpen: false });
 				})
@@ -40,9 +47,9 @@ class EditStatus extends React.Component {
 		}
 	};
 
-	validate = status => {
+	validate = data => {
 		const errors = {};
-		if (!status) errors.status = "Please provide status or fill ---";
+		if (!data.status) errors.status = "Please provide status or fill ---";
 		return errors;
 	};
 

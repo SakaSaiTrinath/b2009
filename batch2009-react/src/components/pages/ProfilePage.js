@@ -87,7 +87,7 @@ class ProfilePage extends React.Component {
 	};
 
 	render() {
-		const { fullname, current_status, articles_count, gallery_count, profile_pic } = this.props;
+		const { fullname, current_status, articles_count, gallery_count, profile_pic, current_location } = this.props;
 		const { loading } = this.state;
 
 		return (
@@ -148,6 +148,17 @@ class ProfilePage extends React.Component {
 									<Segment>
 										{/*Studying B.Tech CSE at Lovely
 										Professional University*/ current_status}
+									</Segment>
+								</Segment.Group>
+								<Segment.Group horizontal>
+									<Segment as="h5">
+										<Icon name="map marker alternate" />
+										Current Location
+									</Segment>
+									<Segment>
+										{current_location && current_location.city}{", "}
+										{current_location && current_location.state}{", "}
+										{current_location && current_location.country}
 									</Segment>
 								</Segment.Group>
 
@@ -211,6 +222,7 @@ function mapStateToProps(state) {
 		fullname: state.basicinfo.fullname,
 		profile_pic: state.basicinfo.profile_pic,
 		current_status: state.basicinfo.current_status,
+		current_location: state.basicinfo.current_location,
 		articles_count: state.basicinfo.articles_count,
 		gallery_count: state.basicinfo.gallery_count
 	}
