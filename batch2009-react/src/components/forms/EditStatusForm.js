@@ -60,11 +60,12 @@ class EditStatusForm extends React.Component {
 	};
 
 	handleStatusChange = (e, { name, value }) => {
-		this.setState({ status: value });
+		this.setState({ status: value, errors: {} });
 	};
 
 	handleLocationChange = (e, { name, value }) => 
 		this.setState({
+			errors: {},
 			data: { ...this.state.data, current_location: { ...this.state.data.current_location, [name]: value } }
 		});
 
@@ -98,8 +99,11 @@ class EditStatusForm extends React.Component {
 						onChange={this.handleLocationChange}
 						name="country"
 						options={CountryOptions}
+						error={!!errors.current_location_country}
 					/>
-
+					{errors.current_location_country && (
+						<InlineError text={errors.current_location_country} />
+					)}
 					<Form.Dropdown 
 						placeholder="State" 
 						fluid 
@@ -110,8 +114,11 @@ class EditStatusForm extends React.Component {
 						name="state"
 						selection 
 						options={StateOptions}
+						error={!!errors.current_location_state}
 					/>
-
+					{errors.current_location_state && (
+						<InlineError text={errors.current_location_state} />
+					)}
 					<Form.Dropdown 
 						placeholder="Location" 
 						fluid
@@ -122,7 +129,11 @@ class EditStatusForm extends React.Component {
 						name="city"
 						selection 
 						options={CityOptions}
+						error={!!errors.current_location_city}
 					/>
+					{errors.current_location_city && (
+						<InlineError text={errors.current_location_city} />
+					)}
 				</Form.Group>
 			</Form>
 		);

@@ -50,6 +50,9 @@ class EditStatus extends React.Component {
 	validate = data => {
 		const errors = {};
 		if (!data.status) errors.status = "Please provide status or fill ---";
+		if (!data.current_location.country) errors.current_location_country = "Can't be empty!";
+		if (!data.current_location.state) errors.current_location_state = "Can't be empty!";
+		if (!data.current_location.city) errors.current_location_city = "Can't be empty!";
 		return errors;
 	};
 
