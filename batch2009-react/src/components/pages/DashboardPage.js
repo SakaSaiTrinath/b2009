@@ -10,7 +10,7 @@ import SideBar from "../utilities/SideBar";
 import AnnouncementsPage from "./AnnouncementsPage";
 import StatusPage from "./StatusPage";
 import FeedPage from "./FeedPage";
-import MyProfilePage from "./MyProfilePage";
+import ProfilePage from "./ProfilePage";
 import SiteGalleryPage from "./SiteGalleryPage";
 import ContactPage from "./ContactPage";
 import SettingsPage from "./SettingsPage";
@@ -68,10 +68,10 @@ class DashboardPage extends React.Component {
 						<FeedPage />
 					</div>
 				];
-			case "myprofile":
+			case "profile":
 				return [
 					<div key={this.state.activeItem}>
-						<MyProfilePage />
+						<ProfilePage />
 					</div>
 				];
 			case "sitegallery":

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import EditFirstThings from "../modals/EditFirstThings";
 import Visibility from "../modals/Visibility";
 
-import { fetchFirstThingsInfo } from "../../actions/firstthingsinfo";
+import { fetchFirstThingsInfo, deleteFTField } from "../../actions/firstthingsinfo";
 
 class FirstThingsPanel extends React.Component {
 	state = {
@@ -21,6 +21,10 @@ class FirstThingsPanel extends React.Component {
 			this.setState({ firstthings: this.props.firstthings });
 		}
 	};
+
+	deleteField = data => {
+		this.props.deleteFTField(data);
+	}
 
 	render() {
 		const { firstthings } = this.state;
@@ -38,11 +42,11 @@ class FirstThingsPanel extends React.Component {
 							<List.Item>
 								<Label
 									as="a"
-									href="https://www.tagquestions.net/my-first-time-tag-questions/"
+									href="http://www.tagquestionss.com/my-first-time-tag-questions/"
 									target="_blank"
 									rel="noreferrer noopener"
 								>
-									NeedSuggestions?
+									Need Suggestions?
 								</Label>
 							</List.Item>
 							<List.Item>
@@ -55,12 +59,15 @@ class FirstThingsPanel extends React.Component {
 					<Table.Body>
 						{firstthings && firstthings.length > 0 ?
 							firstthings.map(ft => (
-								<Table.Row>
+								<Table.Row key={ft._id}>
 									<Table.Cell>
 										<Icon name="first order" color="teal" />
 										{ft.field}
 									</Table.Cell>
 									<Table.Cell>{ft.value}</Table.Cell>
+									<Table.Cell onClick={() => this.deleteField(ft)}>
+										<Icon link name="delete" />
+							        </Table.Cell>
 								</Table.Row>
 							)) : (
 								<Table.Row>
@@ -157,4 +164,4 @@ function mapStateToProps(state) {
 	}
 }
 
-export default connect(mapStateToProps, { fetchFirstThingsInfo })(FirstThingsPanel);
+export default connect(mapStateToProps, { fetchFirstThingsInfo, deleteFTField })(FirstThingsPanel);

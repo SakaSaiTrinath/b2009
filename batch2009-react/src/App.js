@@ -36,9 +36,9 @@ const subroutes = [
 		path: "/feed"
 	},
 	{
-		id: "myprofile",
+		id: "profile",
 		exact: true,
-		path: "/myprofile"
+		path: "/profile"
 	},
 	{
 		id: "sitegallery",

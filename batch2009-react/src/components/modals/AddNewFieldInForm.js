@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 
 import AddNewFieldInFormForm from "../forms/AddNewFieldInFormForm";
 import { addNewFieldInFavourites } from "../../actions/favouritesinfo";
+import { addNewFieldInFirstThings } from "../../actions/firstthingsinfo";
 
 class AddNewFieldInForm extends Component {
 	state = {
@@ -35,30 +36,49 @@ class AddNewFieldInForm extends Component {
 		this.setState({ data });
 	};
 
-	onSubmit = e => {
+	onSubmit = e => { 
 		e.preventDefault();
 		const errors = this.validate(this.state.data);
+		const { tab } = this.props;
 		this.setState({
 			errors
 		});
 		if(Object.keys(errors).length === 0) {
 			this.setState({ loading: true });
-			// alert(`${this.state.data.field}, ${this.state.data.value}`);
-			this.props.addNewFieldInFavourites(this.state.data)
-				.then(() => {
-					this.setState({ 
-						loading: false, 
-						modalOpen: false, 
-						data: { field: "", value: "" }
+			
+			if(tab === "favourites") {
+				this.props.addNewFieldInFavourites(this.state.data)
+					.then(() => {
+						this.setState({ 
+							loading: false, 
+							modalOpen: false, 
+							data: { field: "", value: "" }
+						});
+					})
+					.catch(err => {
+						console.log(err);
+						this.setState({
+							errors: err.response.data.errors,
+							loading: false
+						});
 					});
-				})
-				.catch(err => {
-					console.log(err);
-					this.setState({
-						errors: err.response.data.errors,
-						loading: false
+			} else if(tab === "firstthings") {
+				this.props.addNewFieldInFirstThings(this.state.data)
+					.then(() => {
+						this.setState({ 
+							loading: false, 
+							modalOpen: false, 
+							data: { field: "", value: "" }
+						});
+					})
+					.catch(err => {
+						console.log(err);
+						this.setState({
+							errors: err.response.data.errors,
+							loading: false
+						});
 					});
-				});
+			}
 		}
 	};
 
@@ -116,4 +136,9 @@ class AddNewFieldInForm extends Component {
 	}
 }
 
-export default connect(null, { addNewFieldInFavourites })(AddNewFieldInForm); 
+export default connect(null, 
+	{ 
+		addNewFieldInFavourites, 
+		addNewFieldInFirstThings 
+	}
+)(AddNewFieldInForm); 

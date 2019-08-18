@@ -1,8 +1,6 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 
-import PageContainer from "../utilities/PageContainer";
-
 const options = [
 	{ key: "Navodaya Dayz", text: "Navodaya Dayz", value: "Navodaya Dayz" },
 	{ key: "Memories", text: "Memories", value: "Memories" },
@@ -48,7 +46,6 @@ class EditStatusForm extends React.Component {
 						width={4}
 					/>
 				</Form.Group>
-				<PageContainer /> 
 			</Form>
 		);
 	}

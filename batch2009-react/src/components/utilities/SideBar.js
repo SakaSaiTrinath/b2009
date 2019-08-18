@@ -98,10 +98,10 @@ class SideBar extends React.Component {
 
 					<Menu.Item />
 					<Menu.Item
-						name="myprofile"
+						name="profile"
 						as={NavLink}
-						to="/myprofile"
-						active={activeItem === "myprofile"}
+						to="/profile"
+						active={activeItem === "profile"}
 						onClick={this.props.handleItemClick}
 					>
 						<Icon name="user circle outline" />

@@ -1,5 +1,11 @@
 import axios from "axios";
 
+const config = {
+    headers: {
+        'content-type': 'multipart/form-data'
+    }
+};
+
 export default {
 	user: {
 		login: credentials =>
@@ -12,6 +18,8 @@ export default {
 			axios.post("/api/users/updateBasicInfo", { data }).then(res => res.data.basic_info),
 		updateStatus: status =>
 			axios.post("/api/users/updateStatus", { status }).then(res => res.data.basic_info),
+		uploadProfilePic: formData =>
+			axios.post("/api/users/uploadProfilePic", formData, config).then(res => res.data.basic_info),
 
 		// School info
 		fetchSchoolInfo: () =>
@@ -50,7 +58,11 @@ export default {
 		// Firstthings info
 		fetchFirstThingsInfo: () =>
 			axios.get("/api/users/fetchFirstThingsInfo").then(res => res.data.firstthings),
+		updateFirstThingsInfo: data =>
+			axios.post("/api/users/updateFirstThingsInfo", { data }).then(res => res.data.firstthings),
 		addNewFieldInFirstThings: data =>
-			axios.post("/api/users/addNewFieldInFirstThings", { data }).then(res => res.data.firstthings)
+			axios.post("/api/users/addNewFieldInFirstThings", { data }).then(res => res.data.firstthings),
+		deleteFTField: data =>
+			axios.post("/api/users/deleteFTField", { data }).then(res => res.data.firstthings),
 	}
 }

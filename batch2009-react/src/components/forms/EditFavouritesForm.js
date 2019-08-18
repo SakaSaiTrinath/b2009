@@ -50,7 +50,7 @@ class EditFavouritesForm extends Component {
 		const { errors, loading, favList } = this.state;
 		return (
 			<Form loading={loading}>
-				{favList.map(favItem => (
+				{favList && favList.map(favItem => (
 					<Form.Input 
 						key={favItem._id}
 						name={favItem.field}
@@ -60,7 +60,7 @@ class EditFavouritesForm extends Component {
 						error={!!errors[`${favItem.field}`]} 
 					/>
 				))}
-				<AddNewFieldInForm />
+				<AddNewFieldInForm tab="favourites" />
 			</Form> 
 		);
 	}

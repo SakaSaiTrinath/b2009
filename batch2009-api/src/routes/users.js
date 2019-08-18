@@ -1,9 +1,80 @@
 import express from "express";
-import User from "../models/User";
+import multer from "multer";
+import path from "path";
 
+import User from "../models/User";
 import authenticate from "../middlewares/authenticate";
 
 const router = express.Router();
+
+// Setting storage engine
+const storage = multer.diskStorage({
+  destination: './public/uploads/',
+  filename: function(req, file, cb){
+    cb(null, Date.now() + file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || 
+    	file.mimetype === 'image/png' || 
+    	file.mimetype === 'image/jpg' ) {
+        cb(null, true);
+    } else {
+        // rejects storing a file
+        cb(null, false);
+    }
+}
+
+// Init Upload
+const upload = multer({
+  storage: storage,
+  limits:{fileSize: 1024 * 1024 * 5},
+  fileFilter: fileFilter
+}).single('profile_pic');
+
+// Profile Pic upload
+router.post("/uploadProfilePic", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	upload(req, res, (err) => {
+	    if(err){
+	      res.status(400).json({ errors: { global: err } });
+	    } else {
+	      if(req.file == undefined){
+	        res.status(400).json({ errors: { global: "No File Selected!" } });
+	      } else {
+	      	let imagePath = req.file.path.split('\\')[2];
+	      	User.findOneAndUpdate(
+	      		{ sessionId },
+	      		{ profile_pic: imagePath }
+	      	).then(user => {
+	      		res.status(200).json({
+                    basic_info: {
+						fullname: user.fullname,
+						profile_pic: imagePath,
+						current_status: user.current_status,
+						articles_count: user.articles_count,
+						gallery_count: user.gallery_count,
+						nick_name: user.nick_name,
+						birthdate: user.birthdate,
+						birthmonth: user.birthmonth,
+						gender: user.gender,
+						rel_status: user.rel_status,
+						phone_number: user.phone_number,
+						home_address: user.home_address,
+						blood_group: user.blood_group,
+						known_lang: user.known_lang,
+						zodiac: user.zodiac,
+						hobbies: user.hobbies,
+						goal: user.goal
+					}
+                });
+	      	});
+	      }
+	    }
+	});
+});
+
 
 // Basic info
 router.get("/fetchBasicInfo", authenticate, (req, res) => {
@@ -12,6 +83,7 @@ router.get("/fetchBasicInfo", authenticate, (req, res) => {
 		res.json({ 
 			basic_info: {
 				fullname: user.fullname,
+				profile_pic: user.profile_pic,
 				current_status: user.current_status,
 				articles_count: user.articles_count,
 				gallery_count: user.gallery_count,
@@ -71,6 +143,7 @@ router.post("/updateBasicInfo", authenticate, (req, res) => {
 		res.json({ 
 			basic_info: {
 				fullname: user.fullname,
+				profile_pic: user.profile_pic,
 				current_status: user.current_status,
 				articles_count: user.articles_count,
 				gallery_count: user.gallery_count,
@@ -105,6 +178,7 @@ router.post("/updateStatus", authenticate, (req, res) => {
 		res.json({ 
 			basic_info: {
 				fullname: user.fullname,
+				profile_pic: user.profile_pic,
 				current_status: status,
 				articles_count: user.articles_count,
 				gallery_count: user.gallery_count,
@@ -353,6 +427,55 @@ router.get("/fetchFirstThingsInfo", authenticate, (req, res) => {
 		res.json({
 			firstthings: {
 				firstthings: user.first_things
+			}
+		});
+	});
+});
+
+router.post("/updateFirstThingsInfo", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const { data } = req.body;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ first_things: data }
+	).then(user => {
+		res.json({
+			firstthings: {
+				firstthings: data
+			}
+		});
+	});
+});
+
+router.post("/addNewFieldInFirstThings", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const { data } = req.body;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ "$push": { first_things: data } }
+	).then(user => {
+		const docs = user.first_things;
+		docs.push(data);
+		res.json({
+			firstthings: {
+				firstthings: docs
+			}
+		});
+	});
+});
+
+router.post("/deleteFTField", authenticate, (req, res) => {
+	const { sessionId } = req.currentUser;
+	const { data } = req.body;
+	User.findOneAndUpdate(
+		{ sessionId },
+		{ "$pull": { first_things: data } }
+	).then(user => {
+		let docs = user.first_things;
+		docs = docs.filter(it => it._id != data._id);
+		res.json({
+			firstthings: {
+				firstthings: docs
 			}
 		});
 	});

@@ -94,7 +94,7 @@ class FavouritesPanel extends React.Component {
 										target="_blank"
 										rel="noreferrer noopener"
 									>
-										NeedSuggestions?
+										Need Suggestions?
 									</Label>
 								</List.Item>
 								<List.Item>

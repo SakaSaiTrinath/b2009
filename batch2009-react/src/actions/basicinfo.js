@@ -11,6 +11,7 @@ export const BasicInfoUpdated = basic_info => ({
 	basic_info
 });
 
+//=======================================================
 export const fetchBasicInfo = () => dispatch =>
 	api.user.fetchBasicInfo().then(basic_info => {
 		dispatch(BasicInfoFetched(basic_info));
@@ -23,5 +24,10 @@ export const updateBasicInfo = data => dispatch =>
 
 export const updateStatus = status => dispatch =>
 	api.user.updateStatus(status).then(basic_info => {
+		dispatch(BasicInfoUpdated(basic_info));
+	});
+
+export const uploadProfilePic = formData => dispatch =>
+	api.user.uploadProfilePic(formData).then(basic_info => {
 		dispatch(BasicInfoUpdated(basic_info));
 	});

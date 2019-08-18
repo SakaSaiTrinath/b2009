@@ -1891,6 +1891,11 @@ component-emitter@^1.2.1:
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.3.0.tgz#16e4070fba8ae29b679f2215853ee181ab2eabc0"
   integrity sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg==
 
+compress.js@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/compress.js/-/compress.js-1.1.2.tgz#2c19528a017b7d500673f2df69e66b04074d1464"
+  integrity sha512-92bBngXANtmZpyBqO7E5nQMt6TOJtso8FO5fEx85WeF2t/CDAxs8K+KSu8EuLGMZWWMOdxvFf/bsXG7rOPmAyw==
+
 compressible@~2.0.16:
   version "2.0.17"
   resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.17.tgz#6e8c108a16ad58384a977f3a482ca20bff2f38c1"
