@@ -19,7 +19,7 @@ const schema = new mongoose.Schema({
 	nick_name: { type: String, default: '---' },
 	birthdate: { type: Number, default: 1 },
 	birthmonth: { type: String, default: 1 },
-	gender: { type: String, default: '---' },
+	gender: { type: String, default: '---', required: true },
 	rel_status: { type: String, default: '---' },
 	phone_number: { type: Number, default: 9876543210 },
 	home_address: { type: String, default: '---' },
@@ -39,6 +39,7 @@ const schema = new mongoose.Schema({
 	
 	// afternvavodaya
 	after_navodaya: [{ title: String, duration: String, content: String }],
+	after_navodaya_vis_type: { type: String, default: "all" },
 	after_navodaya_rejected_list: [String],
 	
 	// social aacounts
@@ -78,14 +79,17 @@ const schema = new mongoose.Schema({
 			url: { type: String, default: "---"}
 		}
 	},
+	social_accounts_vis_type: { type: String, default: "All" },
 	social_accounts_rejected_list: String,
 	
 	// favourites
 	favourites: [{ field: String, value: String }],
+	favourites_vis_type: { type: String, default: "All" },
 	favourites_rejected_list: String,
 	
 	// firstthings
 	first_things: [{ field: String, value: String }],
+	first_things_vis_type: { type: String, default: "All" },
 	first_things_rejected_list: String,
 	
 	// others

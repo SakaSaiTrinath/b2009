@@ -8,6 +8,7 @@ import socialaccinfo from "./reducers/socialaccinfo";
 import favouritesinfo from "./reducers/favouritesinfo";
 import firstthingsinfo from "./reducers/firstthingsinfo";
 import locations from "./reducers/locations";
+import other from "./reducers/other";
 
 
 export default combineReducers({
@@ -18,6 +19,7 @@ export default combineReducers({
 	socialaccinfo,
 	favouritesinfo,
 	firstthingsinfo,
-	locations
+	locations,
+	other
 });
 

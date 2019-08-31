@@ -5,15 +5,23 @@ import { connect } from "react-redux";
 import AddNewAfterNavodaya from "../modals/AddNewAfterNavodaya";
 import Visibility from "../modals/Visibility";
 
-import { fetchAfterNavodayaInfo, deleteAN } from "../../actions/afternavodayainfo";
+import { fetchAfterNavodayaInfo, deleteAN, updateANVisibilty } from "../../actions/afternavodayainfo";
+import { fetchAllUsers } from "../../actions/other";
 
 class AfterNavodayaPanel extends React.Component {
 	state = {
-		after_navodaya: this.props.after_navodaya || []
+		after_navodaya: this.props.after_navodaya || [],
+		visibility: {
+			after_navodaya_vis_type: this.props.after_navodaya_vis_type,
+			after_navodaya_rejected_list: this.props.after_navodaya_rejected_list || []
+		},
+		loading: false,
+		modalOpen: false
 	};
 
 	componentDidMount = () => {
 		this.props.fetchAfterNavodayaInfo();
+		this.props.fetchAllUsers();
 	};
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -21,15 +29,58 @@ class AfterNavodayaPanel extends React.Component {
 			this.setState({
 				after_navodaya: this.props.after_navodaya 
 			});
-		}		
+		}	
+
+		if(this.props.after_navodaya_vis_type !== prevProps.after_navodaya_vis_type || 
+			this.props.after_navodaya_rejected_list !== prevProps.after_navodaya_rejected_list) {
+			this.setState({
+				visibility: {
+					after_navodaya_rejected_list: this.props.after_navodaya_rejected_list,
+					after_navodaya_vis_type: this.props.after_navodaya_vis_type
+				} 
+			});
+		}	
+	};
+
+	updateState = visibility => {
+		// console.log("called here!", visibility.vis_type);
+		this.setState({ 
+			visibility: { 
+				after_navodaya_vis_type: visibility.vis_type, 
+				after_navodaya_rejected_list: visibility.rej_list
+			}
+		});
+	};
+
+	onClickSetVisibility = e => {
+		e.preventDefault();
+		this.setState({ loading: true });
+		let { visibility } = this.state;
+		if(visibility.after_navodaya_vis_type === 'all' ||
+			visibility.after_navodaya_vis_type === 'boys' ||
+			visibility.after_navodaya_vis_type === 'girls') 
+		{
+			visibility.after_navodaya_rejected_list = [];
+		}
+		console.log(visibility);
+		this.props
+			.updateANVisibilty(visibility)
+			.then(() => {
+				this.setState({ loading: false, modalOpen: false });
+			});
 	};
 
 	deleteCard = doc => {
 		this.props.deleteAN(doc);
-	}
+	};
+
+	closeModal = () => this.setState({ modalOpen: false });
+
+	openModal = () => this.setState({ modalOpen: true });
 
 	render() {
-		const { after_navodaya } = this.state;
+		const { after_navodaya, modalOpen, loading } = this.state;
+		const { after_navodaya_vis_type, after_navodaya_rejected_list } = this.state.visibility;
 
 		return (
 			<div>
@@ -40,11 +91,20 @@ class AfterNavodayaPanel extends React.Component {
 						<Container fluid textAlign="right">
 							<List horizontal>
 								<List.Item>
-									<Visibility />
+								<Visibility 
+									openModal={this.openModal}
+									closeModal={this.closeModal}
+									loading={loading}
+									modalOpen={modalOpen}
+									updateState={this.updateState}
+									vis_type={after_navodaya_vis_type}
+									rej_list={after_navodaya_rejected_list}
+									onClickSetVisibility={this.onClickSetVisibility}
+								/>
 								</List.Item>
 								<List.Item>
 									<AddNewAfterNavodaya />
-								</List.Item>
+							 	</List.Item>
 							</List>
 						</Container>
 					</div>
@@ -95,8 +155,18 @@ class AfterNavodayaPanel extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		after_navodaya: state.afternavodayainfo.after_navodaya
+		all_users: state.other.all_users,
+		after_navodaya: state.afternavodayainfo.after_navodaya,
+		after_navodaya_vis_type: state.afternavodayainfo.after_navodaya_vis_type,
+		after_navodaya_rejected_list: state.afternavodayainfo.after_navodaya_rejected_list
 	}
 }
 
-export default connect(mapStateToProps, { fetchAfterNavodayaInfo, deleteAN })(AfterNavodayaPanel);
+export default connect(mapStateToProps, 
+	{ 
+		fetchAllUsers,
+		fetchAfterNavodayaInfo, 
+		deleteAN, 
+		updateANVisibilty 
+	}
+)(AfterNavodayaPanel);

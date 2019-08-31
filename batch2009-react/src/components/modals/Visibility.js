@@ -10,14 +10,49 @@ import {
 import VisibilityForm from "../forms/VisibilityForm";
 
 class Visibility extends React.Component {
-	state = {};
+	state = {
+		visibility: {
+			vis_type: this.props.vis_type,
+			rej_list: this.props.rej_list || []
+		}
+	};
+
+	updateState = visibility => {
+		// console.log("called!", visibility.vis);
+		this.setState({ visibility });
+	};
+
+	/*componentDidMount = () => {
+		this.props.updateState(this.state.visibility);	
+	};*/
+
+	componentDidUpdate = (prevProps, prevState) => {
+		if(prevState.visibility !== this.state.visibility) {
+			this.props.updateState(this.state.visibility);			
+		}
+
+		if(this.props.vis_type !== prevProps.vis_type ||
+			this.props.rej_list !== prevProps.rej_list) {
+			this.setState({
+				visibility: { 
+					vis_type: this.props.vis_type,
+					rej_list: this.props.rej_list
+				} 
+			});
+		}
+	};
 
 	render() {
+		const { rej_list, vis_type } = this.state.visibility;
+
 		return (
 			<Modal
+				open={this.props.modalOpen}
+				onClose={this.props.closeModal}
 				size="small"
 				trigger={
 					<Container
+						 onClick={this.props.openModal}
 						fluid
 						textAlign="right"
 						style={{ marginBottom: "15px" }}
@@ -39,7 +74,12 @@ class Visibility extends React.Component {
 				</Header>
 				<Modal.Content>
 					<Modal.Description>
-						<VisibilityForm />
+						<VisibilityForm
+							loading={this.props.loading} 
+							updateState={this.updateState}
+							vis_type={vis_type}
+							rej_list={rej_list}
+						/>
 					</Modal.Description>
 				</Modal.Content>
 				<Modal.Actions>
@@ -48,7 +88,7 @@ class Visibility extends React.Component {
 						icon="checkmark"
 						labelPosition="left"
 						content="Set VisibilityForm"
-						onClick={this.close}
+						onClick={this.props.onClickSetVisibility}
 					/>
 				</Modal.Actions>
 			</Modal>

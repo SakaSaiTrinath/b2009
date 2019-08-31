@@ -29,3 +29,8 @@ export const deleteAN = doc => dispatch =>
 	api.user.deleteAN(doc).then(after_navodaya_info => {
 		dispatch(AterNavodayaInfoUpdated(after_navodaya_info));
 	});
+
+export const updateANVisibilty = visibility => dispatch =>
+	api.user.updateANVisibilty(visibility).then(after_navodaya_info => {
+		dispatch(AterNavodayaInfoUpdated(after_navodaya_info));
+	});

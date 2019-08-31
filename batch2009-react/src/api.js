@@ -38,6 +38,8 @@ export default {
 			axios.post("/api/users/addNewAN", { data }).then(res => res.data.after_navodaya),
 		deleteAN: data =>
 			axios.post("/api/users/deleteAN", { data }).then(res => res.data.after_navodaya),
+		updateANVisibilty: visibility =>
+			axios.post("/api/users/updateANVisibilty", { visibility }).then(res => res.data.after_navodaya),
 
 		// Social info
 		fetchSocialAccInfo: () =>
@@ -64,6 +66,10 @@ export default {
 			axios.post("/api/users/addNewFieldInFirstThings", { data }).then(res => res.data.firstthings),
 		deleteFTField: data =>
 			axios.post("/api/users/deleteFTField", { data }).then(res => res.data.firstthings),
+
+		// other
+		fetchAllUsers: () =>
+			axios.get("/api/users/fetchAllUsers").then(res => res.data.all_users),
 	},
 	locations: {
 		fetchCountries: () =>

@@ -25,7 +25,8 @@ import { fetchBasicInfo, uploadProfilePic } from "../../actions/basicinfo";
 
 class ProfilePage extends React.Component {
 	state = {
-		loading: false
+		loading: false,
+		imageHash: Date.now()
 	};
 
 	componentDidMount = () => {
@@ -52,11 +53,9 @@ class ProfilePage extends React.Component {
 			}).then(modFiles => {
 				let uploadableFiles = [];
 				
-				// console.log("Modified files: ", modFiles);
 				for (var i = modFiles.length - 1; i >= 0; i--) {
-					// console.log(modFiles[i]);
 					let file = Compress.convertBase64ToFile(modFiles[i].data, modFiles[i].ext);
-					let filename = Date.now() + modFiles[i].alt;
+					let filename = this.props.fullname+ "-profile-pic." + modFiles[i].ext.split('/')[1];
 					let filetype = modFiles[i].ext;
 					let filelastMod = files[i].lastModified;
 					uploadableFiles.push(new File([file], filename, {type: filetype, lastModified: filelastMod}));
@@ -72,7 +71,8 @@ class ProfilePage extends React.Component {
 		        	.then(res => {
 		        		alert("Image uploaded successfully");
 		        		this.setState({
-		        			loading: false 
+		        			loading: false,
+		        			imageHash: Date.now() 
 		        		});
 		        	})
 		        	.catch(error => {
@@ -88,7 +88,7 @@ class ProfilePage extends React.Component {
 
 	render() {
 		const { fullname, current_status, articles_count, gallery_count, profile_pic, current_location } = this.props;
-		const { loading } = this.state;
+		const { loading, imageHash } = this.state;
 
 		return (
 			<Router>
@@ -106,7 +106,8 @@ class ProfilePage extends React.Component {
 							<Segment textAlign="center" stacked raised loading={loading}>
 								{ profile_pic ? (
 									<Image
-										src={`http://localhost:8080/`+profile_pic}
+										src={`/${profile_pic}?${imageHash}`}
+										// src={`http://localhost:8080/${profile_pic}?${imageHash}`}
 										size="medium"
 										centered
 									/>
