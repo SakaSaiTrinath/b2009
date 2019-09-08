@@ -60,7 +60,9 @@ class EditStatusForm extends React.Component {
 	};
 
 	handleStatusChange = (e, { name, value }) => {
-		this.setState({ status: value, errors: {} });
+		this.setState({
+			data: {...this.state.data, status: value }
+		})
 	};
 
 	handleLocationChange = (e, { name, value }) => 

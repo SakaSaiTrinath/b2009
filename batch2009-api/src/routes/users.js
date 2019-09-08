@@ -56,7 +56,7 @@ router.post("/uploadProfilePic", authenticate, upload.single('profile_pic'), (re
 	      }
 	    }
 	});*/
-  	let imagePath = req.file.path.split('\\')[2];
+  	let imagePath = req.file.originalname;
   	User.findOneAndUpdate(
   		{ sessionId },
   		{ profile_pic: imagePath }
