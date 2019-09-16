@@ -80,6 +80,8 @@ export default {
 		// other
 		fetchAllUsers: () =>
 			axios.get("/api/users/fetchAllUsers").then(res => res.data.all_users),
+		fetchAllUsersFull: () =>
+			axios.get("/api/users/fetchAllUsersFull").then(res => res.data.all_users),
 	},
 	locations: {
 		fetchCountries: () =>

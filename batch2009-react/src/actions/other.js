@@ -11,3 +11,8 @@ export const fetchAllUsers = () => dispatch =>
 	api.user.fetchAllUsers().then(all_users => {
 		dispatch(allUsersFetched(all_users));
 	});
+
+export const fetchAllUsersFull = () => dispatch =>
+	api.user.fetchAllUsersFull().then(all_users => {
+		dispatch(allUsersFetched(all_users));
+	});

@@ -625,4 +625,13 @@ router.get("/fetchAllUsers", authenticate, (req, res) => {
 	});
 }); 
 
+router.get("/fetchAllUsersFull", authenticate, (req, res) => {
+	User.find(
+		{}, 
+		'isJoined profile_pic fullname current_status studied_from_year studied_to_year current_location gender birthmonth birthdate '
+	).then(users => {
+		res.json({ all_users: users });
+	});
+});
+
 export default router;

@@ -1,193 +1,40 @@
 import React from "react";
 import { Header, Grid, Card, Icon, Image, Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import gImg from "../images/my pic.jpg";
+import { connect } from 'react-redux';
+
+import dImg from "../images/profile-dummy.jpg";
 import SearchBar from "../utilities/SearchBar";
-
-const usersJoined = [
-	{
-		id: 1,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/matthew.png",
-		name: "Matthew",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Matthew",
-		value: "Matthew",
-		text: "Matthew"
-	},
-	{
-		id: 2,
-		imgurl: gImg,
-		name: "Saka Sai Trinath",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus:
-			"Studying B.Tech at Lovely Professional University, Punjab",
-		key: "Saka Sai Trinath",
-		value: "Saka Sai Trinath",
-		text: "Saka Sai Trinath"
-	},
-	{
-		id: 3,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/elliot.jpg",
-		name: "Elliot Baker",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Elliot Baker",
-		value: "Elliot Baker",
-		text: "Elliot Baker"
-	},
-	{
-		id: 4,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/elliot.jpg",
-		name: "Steve Sanders",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Steve Sanders",
-		value: "Steve Sanders",
-		text: "Steve Sanders"
-	},
-	{
-		id: 5,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/molly.png",
-		name: "Molly Thomas",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Molly Thomas",
-		value: "Molly Thomas",
-		text: "Molly Thomas"
-	},
-	{
-		id: 6,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/jenny.jpg",
-		name: "Jenny Lawrence",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Jenny Lawrence",
-		value: "Jenny Lawrence",
-		text: "Jenny Lawrence"
-	},
-	{
-		id: 7,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/daniel.jpg",
-		name: "Daniel",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Daniel s",
-		value: "Daniel s",
-		text: "Daniel s"
-	},
-	{
-		id: 8,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/daniel.jpg",
-		name: "Anil",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Anil",
-		value: "Anil",
-		text: "Anil"
-	},
-	{
-		id: 9,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/molly.png",
-		name: "Nag",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Nag",
-		value: "Nag",
-		text: "Nag"
-	},
-	{
-		id: 10,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/jenny.jpg",
-		name: "Robert",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Robert",
-		value: "Robert",
-		text: "Robert"
-	},
-	{
-		id: 11,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/daniel.jpg",
-		name: "Bobby",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Bobby",
-		value: "Bobby",
-		text: "Bobby"
-	},
-	{
-		id: 12,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/daniel.jpg",
-		name: "Richard Parker",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Richard Parker",
-		value: "Richard Parker",
-		text: "Richard Parker"
-	}
-];
-
-const usersYetToJoin = [
-	{
-		id: 1,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/jenny.jpg",
-		name: "Jenny Lawrence",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Jenny Lawrence",
-		value: "Jenny Lawrence",
-		text: "Jenny Lawrence"
-	},
-	{
-		id: 2,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/daniel.jpg",
-		name: "Vishal",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Vishal",
-		value: "Vishal",
-		text: "Vishal"
-	},
-	{
-		id: 3,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/daniel.jpg",
-		name: "Daniel",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Daniel",
-		value: "Daniel",
-		text: "Daniel"
-	},
-	{
-		id: 4,
-		imgurl: "https://react.semantic-ui.com/images/avatar/large/elliot.jpg",
-		name: "Steve Sanders",
-		studyperiod: "2009 (6th) - 2016 (12th)",
-		currentstatus: "Studying B.Sc at Gitam University, Visakhapatnam",
-		key: "Steve Sanders",
-		value: "Steve Sanders",
-		text: "Steve Sanders"
-	}
-];
+import { fetchAllUsersFull } from '../../actions/other';
 
 let users = [];
 
 class StatusPage extends React.Component {
 	state = { 
 		page: "usersJoined", 
-		results: [] 
+		results: [],
+		usersJoined: [],
+		usersYetToJoin: []
 	};
 
-	getsearchresults = result => {
-		this.setState({
-			results: result
-		});
+	componentDidMount() {
+		this.props.fetchAllUsersFull();
+	}
 
-		if (this.state.results.size > 0) {
-			users = this.state.results;
+	componentDidUpdate(prevProps, prevState) {
+		if(this.props.all_users !== prevProps.all_users && this.props.all_users) {
+			const { usersYetToJoin, usersJoined } = this.state;
+			this.props.all_users.map(user => {
+				if(user.isJoined) {
+					usersJoined.push(user);
+				} else {
+					usersYetToJoin.push(user);
+				}
+				return null;
+			});
+			this.setState({ usersJoined, usersYetToJoin });
 		}
-	};
+	}
 
 	handlePage = (e, { name }) => {
 		this.setState({
@@ -195,19 +42,33 @@ class StatusPage extends React.Component {
 		});
 	};
 
+	getsearchresults = results => {
+		this.setState({ results });
+	}
+
 	render() {
-		const { page } = this.state;
+		const { page, usersJoined, usersYetToJoin, results } = this.state;
 
-		const source = users.map(user => ({
-			title: user.name,
-			description: user.currentstatus,
-			image: user.imgurl
-			// price: user.studyperiod
-		}));
+		let source = [];
+		if(this.props.all_users) {
+			source = this.props.all_users.map(user => ({
+				title: user.fullname,
+				description: user.current_status,
+				image: user.profile_pic || dImg,
+				price: `${user.studied_from_year} - ${user.studied_to_year}`
+			}));
+		}
 
-		if (this.state.results.size > 0) {
-			users = this.state.results;
-		} else if (this.state.page === "usersJoined") {
+		if(results.length > 0 && this.props.all_users) {
+			users = [];
+			for (var i = results.length - 1; i >= 0; i--) {
+				for (var j = this.props.all_users.length - 1; j >= 0; j--) {
+					if(this.props.all_users[j].fullname === results[i].title) {
+						users.push(this.props.all_users[j]);
+					}
+				}
+			}
+		} else if(page === "usersJoined") {
 			users = usersJoined;
 		} else {
 			users = usersYetToJoin;
@@ -217,13 +78,16 @@ class StatusPage extends React.Component {
 			<Grid
 				textAlign="center"
 				stackable
-				style={{
-					minHeight: window.innerHeight
-				}}
 			>
 				{/* Page Title */}
 				<Grid.Row centered>
-					<Header as="h1" content="Status Page" color="teal" />
+					<Grid.Column width={8}>
+						<Header as="h1" content="Status Page" color="teal" />
+						<SearchBar
+							getsearchresults={this.getsearchresults}
+							source={source}
+						/>
+					</Grid.Column>
 				</Grid.Row>
 
 				<Grid.Row>
@@ -234,34 +98,30 @@ class StatusPage extends React.Component {
 								active={page === "usersJoined"}
 								onClick={this.handlePage}
 							>
-								Joined
+								Joined ({usersJoined.length})
 							</Button>
 							<Button
 								name="usersYetToJoin"
 								active={page === "usersYetToJoin"}
 								onClick={this.handlePage}
 							>
-								Yet To Join
+								Yet To Join ({usersYetToJoin.length})
 							</Button>
 						</Button.Group>
 					</Grid.Column>
 				</Grid.Row>
 
-				<Grid.Row>
-					<Grid.Column width={8}>
-						<SearchBar
-							getsearchresults={() => this.getsearchresults()}
-							source={source}
-						/>
-					</Grid.Column>
-				</Grid.Row>
 
-				<Grid.Row>
+				<Grid.Row 
+					style={{
+						minHeight: window.innerHeight - 350
+					}}
+				>
 					<Grid.Column>
 						<Grid stackable centered textAlign="center">
 							<Grid.Row align="middle">
-								{users.map(user => (
-									<Grid.Column width={4} key={user.id}>
+								{users && users.length > 0 ? users.map(user => (
+									<Grid.Column width={4} key={user._id}>
 										<Card
 											color="teal"
 											style={{
@@ -273,20 +133,20 @@ class StatusPage extends React.Component {
 										>
 											<Card.Content>
 												<Image
-													src={user.imgurl}
+													src={user.profile_pic || dImg}
 													floated="right"
 													size="mini"
 												/>
 												<Card.Header>
-													{user.name}
+													{user.fullname}
 												</Card.Header>
 												<Card.Meta>
 													<span className="date">
-														{user.studyperiod}
+														{user.studied_from_year} {" - "} {user.studied_to_year}
 													</span>
 												</Card.Meta>
 												<Card.Description>
-													{user.currentstatus}
+													{user.current_status}
 												</Card.Description>
 											</Card.Content>
 											<Card.Content extra>
@@ -306,7 +166,9 @@ class StatusPage extends React.Component {
 											</Card.Content>
 										</Card>
 									</Grid.Column>
-								))}
+								)) : (
+									"No users!"
+								)}
 							</Grid.Row>
 						</Grid>
 					</Grid.Column>
@@ -316,4 +178,10 @@ class StatusPage extends React.Component {
 	}
 }
 
-export default StatusPage;
+function mapStateToProps(state) {
+	return {
+		all_users: state.other.all_users
+	}
+}
+
+export default connect(mapStateToProps, { fetchAllUsersFull })(StatusPage);

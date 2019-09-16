@@ -10,8 +10,14 @@ class SearchBar extends Component {
     this.state = {};
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.resetComponent();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.results !== this.state.results) {
+      this.props.getsearchresults(this.state.results);
+    }
   }
 
   resetComponent = () =>
@@ -33,7 +39,6 @@ class SearchBar extends Component {
         isLoading: false,
         results: _.filter(this.props.source, isMatch)
       });
-      this.props.getsearchresults(this.state.results);
     }, 300);
   };
 
@@ -55,7 +60,6 @@ class SearchBar extends Component {
               results={results}
               value={value}
               placeholder="Search users"
-              {...this.props}
             />
           </Grid.Column>
           {/* <Grid.Column width={10}>
@@ -74,7 +78,7 @@ class SearchBar extends Component {
 
 SearchBar.propTypes = {
   getsearchresults: PropTypes.func.isRequired,
-  source: PropTypes.object.isRequired // eslint-disable-line
+  // source: PropTypes.object.isRequired // eslint-disable-line
 };
 
 export default SearchBar;
