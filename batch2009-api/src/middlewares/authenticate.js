@@ -12,7 +12,7 @@ export default (req, res, next) => {
 			if (err) {
 				res.status(401).json({ errors: { global: "Invalid token" } });
 			} else {
-				User.findOne({ sessionId: decoded.sessionId }).then(user => {
+				User.findOne({ username: decoded.username }).then(user => {
 					req.currentUser = user;
 					next();
 				});

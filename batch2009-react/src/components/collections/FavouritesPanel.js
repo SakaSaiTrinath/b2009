@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import EditFavourites from "../modals/EditFavourites";
 import Visibility from "../modals/Visibility";
 
-import { fetchFavouritesInfo, deleteFavField } from "../../actions/favouritesinfo";
+import { fetchFavouritesInfo, deleteFavField, updateFavVisibilty } from "../../actions/favouritesinfo";
 
 /* const favQue = [
 	{
@@ -56,7 +56,13 @@ import { fetchFavouritesInfo, deleteFavField } from "../../actions/favouritesinf
 
 class FavouritesPanel extends React.Component {
 	state = {
-		favList: this.props.favourites
+		favList: this.props.favourites,
+		visibility: {
+			favourites_vis_type: this.props.favourites_vis_type,
+			favourites_rejected_list: this.props.favourites_rejected_list || []
+		},
+		loading: false,
+		modalOpen: false
 	};
 
 	componentDidMount = () => {
@@ -67,14 +73,56 @@ class FavouritesPanel extends React.Component {
 		if(this.props.favourites !== prevProps.favourites) {
 			this.setState({ favList: this.props.favourites });
 		}
+
+		if(this.props.favourites_vis_type !== prevProps.favourites_vis_type || 
+			this.props.favourites_rejected_list !== prevProps.favourites_rejected_list) {
+			this.setState({
+				visibility: {
+					favourites_rejected_list: this.props.favourites_rejected_list,
+					favourites_vis_type: this.props.favourites_vis_type
+				} 
+			});
+		}	
+	};
+
+	updateState = visibility => {
+		// console.log("called here!", visibility.vis_type);
+		this.setState({ 
+			visibility: { 
+				favourites_vis_type: visibility.vis_type, 
+				favourites_rejected_list: visibility.rej_list
+			}
+		});
+	};
+
+	onClickSetVisibility = e => {
+		e.preventDefault();
+		this.setState({ loading: true });
+		let { visibility } = this.state;
+		if(visibility.favourites_rejected_list === 'all' ||
+			visibility.favourites_rejected_list === 'boys' ||
+			visibility.favourites_rejected_list === 'girls') 
+		{
+			visibility.favourites_vis_type = [];
+		}
+		this.props
+			.updateFavVisibilty(visibility)
+			.then(() => {
+				this.setState({ loading: false, modalOpen: false });
+			});
 	};
 
 	deleteField = data => {
 		this.props.deleteFavField(data);
-	}
+	};
+
+	closeModal = () => this.setState({ modalOpen: false });
+
+	openModal = () => this.setState({ modalOpen: true });
 
 	render() {
-		const { favList } = this.state;
+		const { favourites_vis_type, favourites_rejected_list } = this.state.visibility;
+		const { favList, modalOpen, loading } = this.state;
 
 		return (
 			<div>
@@ -85,7 +133,16 @@ class FavouritesPanel extends React.Component {
 						<Container fluid textAlign="right">
 							<List horizontal>
 								<List.Item>
-									<Visibility />
+									<Visibility 
+										openModal={this.openModal}
+										closeModal={this.closeModal}
+										loading={loading}
+										modalOpen={modalOpen}
+										updateState={this.updateState}
+										vis_type={favourites_vis_type}
+										rej_list={favourites_rejected_list}
+										onClickSetVisibility={this.onClickSetVisibility}
+									/>
 								</List.Item>
 								<List.Item>
 									<Label
@@ -130,8 +187,17 @@ class FavouritesPanel extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		favourites: state.favouritesinfo.favourites
+		favourites: state.favouritesinfo.favourites,
+		favourites_rejected_list: state.favouritesinfo.favourites_rejected_list,
+		favourites_vis_type: state.favouritesinfo.favourites_vis_type
 	}
 }
 
-export default connect(mapStateToProps, { fetchFavouritesInfo, deleteFavField })(FavouritesPanel);
+export default connect(
+	mapStateToProps, 
+	{ 
+		fetchFavouritesInfo, 
+		deleteFavField,
+		updateFavVisibilty
+	}
+)(FavouritesPanel);

@@ -5,11 +5,17 @@ import { connect } from "react-redux";
 import EditSocialAccounts from "../modals/EditSocialAccounts";
 import Visibility from "../modals/Visibility";
 
-import { fetchSocialAccInfo } from "../../actions/socialaccinfo";
+import { fetchSocialAccInfo, updateSocialVisibilty } from "../../actions/socialaccinfo";
 
 class SocialAccountsPanel extends React.Component {
 	state = {
-		social_accounts: {}
+		social_accounts: {},
+		visibility: {
+			social_accounts_vis_type: this.props.social_accounts_vis_type,
+			social_accounts_rejected_list: this.props.social_accounts_rejected_list || []
+		},
+		loading: false,
+		modalOpen: false
 	};
 
 	componentDidMount = () => {
@@ -20,7 +26,48 @@ class SocialAccountsPanel extends React.Component {
 		if(this.props.social_accounts !== prevProps.social_accounts) {
 			this.setState({ social_accounts: this.props.social_accounts });
 		}
+
+		if(this.props.social_accounts_vis_type !== prevProps.social_accounts_vis_type || 
+			this.props.social_accounts_rejected_list !== prevProps.social_accounts_rejected_list) {
+			this.setState({
+				visibility: {
+					social_accounts_rejected_list: this.props.social_accounts_rejected_list,
+					social_accounts_vis_type: this.props.social_accounts_vis_type
+				} 
+			});
+		}
 	}
+	
+	updateState = visibility => {
+		// console.log("called here!", visibility.vis_type);
+		this.setState({ 
+			visibility: { 
+				social_accounts_vis_type: visibility.vis_type, 
+				social_accounts_rejected_list: visibility.rej_list
+			}
+		});
+	};
+
+	onClickSetVisibility = e => {
+		e.preventDefault();
+		this.setState({ loading: true });
+		let { visibility } = this.state;
+		if(visibility.social_accounts_vis_type === 'all' ||
+			visibility.social_accounts_vis_type === 'boys' ||
+			visibility.social_accounts_vis_type === 'girls') 
+		{
+			visibility.social_accounts_rejected_list = [];
+		}
+		this.props
+			.updateSocialVisibilty(visibility)
+			.then(() => {
+				this.setState({ loading: false, modalOpen: false });
+			});
+	};	
+
+	closeModal = () => this.setState({ modalOpen: false });
+
+	openModal = () => this.setState({ modalOpen: true });
 
 	render() {
 		const { 
@@ -34,6 +81,8 @@ class SocialAccountsPanel extends React.Component {
 			pinterest,
 			github
 		} = this.state.social_accounts;
+		const { modalOpen, loading } = this.state;
+		const { social_accounts_vis_type, social_accounts_rejected_list } = this.state.visibility;
 
 		return (
 			<div>
@@ -45,7 +94,16 @@ class SocialAccountsPanel extends React.Component {
 							<Container fluid textAlign="right">
 								<List horizontal>
 									<List.Item>
-										<Visibility />
+										<Visibility 
+											openModal={this.openModal}
+											closeModal={this.closeModal}
+											loading={loading}
+											modalOpen={modalOpen}
+											updateState={this.updateState}
+											vis_type={social_accounts_vis_type}
+											rej_list={social_accounts_rejected_list}
+											onClickSetVisibility={this.onClickSetVisibility}
+										/>
 									</List.Item>
 									<List.Item>
 										<EditSocialAccounts />
@@ -218,7 +276,16 @@ class SocialAccountsPanel extends React.Component {
 				</Responsive>
 
 				<Responsive {...Responsive.onlyMobile}>
-					<Visibility />
+					<Visibility 
+						openModal={this.openModal}
+						closeModal={this.closeModal}
+						loading={loading}
+						modalOpen={modalOpen}
+						updateState={this.updateState}
+						vis_type={social_accounts_vis_type}
+						rej_list={social_accounts_rejected_list}
+						onClickSetVisibility={this.onClickSetVisibility}
+					/>
 					<EditSocialAccounts />
 					<Divider />
 					<Button circular color="facebook" icon="facebook" />
@@ -295,8 +362,16 @@ class SocialAccountsPanel extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		social_accounts: state.socialaccinfo.social_accounts
+		social_accounts: state.socialaccinfo.social_accounts,
+		social_accounts_vis_type: state.socialaccinfo.social_accounts_vis_type,
+		social_accounts_rejected_list: state.socialaccinfo.social_accounts_rejected_list
 	}
 }
 
-export default connect(mapStateToProps, { fetchSocialAccInfo })(SocialAccountsPanel);
+export default connect(
+	mapStateToProps, 
+	{ 
+		fetchSocialAccInfo,
+		updateSocialVisibilty
+	}
+)(SocialAccountsPanel);

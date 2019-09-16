@@ -46,6 +46,8 @@ export default {
 			axios.get("/api/users/fetchSocialAccInfo").then(res => res.data.social_acc),
 		updateSocialAccInfo: data =>
 			axios.post("/api/users/updateSocialAccInfo", { data }).then(res => res.data.social_acc),
+		updateSocialVisibilty: visibility =>
+			axios.post("/api/users/updateSocialVisibilty", { visibility }).then(res => res.data.social_acc),
 
 		// Favourites info
 		fetchFavouritesInfo: () =>
@@ -56,6 +58,8 @@ export default {
 			axios.post("/api/users/addNewFieldInFavourites", { data }).then(res => res.data.favourites),
 		deleteFavField: data =>
 			axios.post("/api/users/deleteFavField", { data }).then(res => res.data.favourites),
+		updateFavVisibilty: visibility =>
+			axios.post("/api/users/updateFavVisibilty", { visibility }).then(res => res.data.favourites),
 
 		// Firstthings info
 		fetchFirstThingsInfo: () =>
@@ -66,6 +70,8 @@ export default {
 			axios.post("/api/users/addNewFieldInFirstThings", { data }).then(res => res.data.firstthings),
 		deleteFTField: data =>
 			axios.post("/api/users/deleteFTField", { data }).then(res => res.data.firstthings),
+		updateFTVisibilty: visibility =>
+			axios.post("/api/users/updateFTVisibilty", { visibility }).then(res => res.data.firstthings),
 
 		// other
 		fetchAllUsers: () =>

@@ -5,11 +5,17 @@ import { connect } from "react-redux";
 import EditFirstThings from "../modals/EditFirstThings";
 import Visibility from "../modals/Visibility";
 
-import { fetchFirstThingsInfo, deleteFTField } from "../../actions/firstthingsinfo";
+import { fetchFirstThingsInfo, deleteFTField, updateFTVisibilty } from "../../actions/firstthingsinfo";
 
 class FirstThingsPanel extends React.Component {
 	state = {
-		firstthings: this.props.firstthings
+		firstthings: this.props.firstthings,
+		visibility: {
+			first_things_vis_type: this.props.first_things_vis_type,
+			first_things_rejected_list: this.props.first_things_rejected_list || []
+		},
+		loading: false,
+		modalOpen: false
 	};
 
 	componentDidMount = () => {
@@ -20,14 +26,56 @@ class FirstThingsPanel extends React.Component {
 		if(this.props.firstthings !== prevProps.firstthings) {
 			this.setState({ firstthings: this.props.firstthings });
 		}
+
+		if(this.props.first_things_vis_type !== prevProps.first_things_vis_type || 
+			this.props.first_things_rejected_list !== prevProps.first_things_rejected_list) {
+			this.setState({
+				visibility: {
+					first_things_rejected_list: this.props.first_things_rejected_list,
+					first_things_vis_type: this.props.first_things_vis_type
+				} 
+			});
+		}	
+	};
+
+	updateState = visibility => {
+		// console.log("called here!", visibility.vis_type);
+		this.setState({ 
+			visibility: { 
+				first_things_vis_type: visibility.vis_type, 
+				first_things_rejected_list: visibility.rej_list
+			}
+		});
+	};
+
+	onClickSetVisibility = e => {
+		e.preventDefault();
+		this.setState({ loading: true });
+		let { visibility } = this.state;
+		if(visibility.first_things_vis_type === 'all' ||
+			visibility.first_things_vis_type === 'boys' ||
+			visibility.first_things_vis_type === 'girls') 
+		{
+			visibility.first_things_rejected_list = [];
+		}
+		this.props
+			.updateFTVisibilty(visibility)
+			.then(() => {
+				this.setState({ loading: false, modalOpen: false });
+			});
 	};
 
 	deleteField = data => {
 		this.props.deleteFTField(data);
-	}
+	};
+
+	closeModal = () => this.setState({ modalOpen: false });
+
+	openModal = () => this.setState({ modalOpen: true });
 
 	render() {
-		const { firstthings } = this.state;
+		const { firstthings, modalOpen, loading } = this.state;
+		const { first_things_vis_type, first_things_rejected_list } = this.state.visibility;
 
 		return (
 			<div>
@@ -37,7 +85,16 @@ class FirstThingsPanel extends React.Component {
 					<Container fluid textAlign="right">
 						<List horizontal>
 							<List.Item>
-								<Visibility />
+								<Visibility 
+									openModal={this.openModal}
+									closeModal={this.closeModal}
+									loading={loading}
+									modalOpen={modalOpen}
+									updateState={this.updateState}
+									vis_type={first_things_vis_type}
+									rej_list={first_things_rejected_list}
+									onClickSetVisibility={this.onClickSetVisibility}
+								/>
 							</List.Item>
 							<List.Item>
 								<Label
@@ -160,8 +217,17 @@ class FirstThingsPanel extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		firstthings: state.firstthingsinfo.firstthings
+		firstthings: state.firstthingsinfo.firstthings,
+		first_things_vis_type: state.firstthingsinfo.first_things_vis_type,
+		first_things_rejected_list: state.firstthingsinfo.first_things_rejected_list
 	}
 }
 
-export default connect(mapStateToProps, { fetchFirstThingsInfo, deleteFTField })(FirstThingsPanel);
+export default connect(
+	mapStateToProps, 
+	{ 
+		fetchFirstThingsInfo, 
+		deleteFTField,
+		updateFTVisibilty 
+	}
+)(FirstThingsPanel);

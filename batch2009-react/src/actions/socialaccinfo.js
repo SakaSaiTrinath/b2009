@@ -24,3 +24,8 @@ export const updateSocialAccInfo = data => dispatch =>
 	api.user.updateSocialAccInfo(data).then(social_acc => {
 		dispatch(SocialAccInfoUpdated(social_acc));
 	});
+
+export const updateSocialVisibilty = visibility => dispatch =>
+	api.user.updateSocialVisibilty(visibility).then(social_acc => {
+		dispatch(SocialAccInfoUpdated(social_acc));
+	});

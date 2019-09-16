@@ -31,3 +31,8 @@ export const deleteFavField = data => dispatch =>
 	api.user.deleteFavField(data).then(favourites => {
 		dispatch(FavouritesInfoUpdated(favourites));
 	});
+
+export const updateFavVisibilty = visibility => dispatch =>
+	api.user.updateFavVisibilty(visibility).then(favourites => {
+		dispatch(FavouritesInfoUpdated(favourites));
+	});

@@ -31,3 +31,8 @@ export const deleteFTField = data => dispatch =>
 	api.user.deleteFTField(data).then(firstthings => {
 		dispatch(FirstThingsInfoUpdated(firstthings));
 	});
+
+export const updateFTVisibilty = visibility => dispatch =>
+	api.user.updateFTVisibilty(visibility).then(firstthings => {
+		dispatch(FirstThingsInfoUpdated(firstthings));
+	});

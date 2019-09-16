@@ -80,17 +80,17 @@ const schema = new mongoose.Schema({
 		}
 	},
 	social_accounts_vis_type: { type: String, default: "All" },
-	social_accounts_rejected_list: String,
+	social_accounts_rejected_list: [String],
 	
 	// favourites
 	favourites: [{ field: String, value: String }],
 	favourites_vis_type: { type: String, default: "All" },
-	favourites_rejected_list: String,
+	favourites_rejected_list: [String],
 	
 	// firstthings
 	first_things: [{ field: String, value: String }],
 	first_things_vis_type: { type: String, default: "All" },
-	first_things_rejected_list: String,
+	first_things_rejected_list: [String],
 	
 	// others
 	articles_count: { type: Number, default: 0 },

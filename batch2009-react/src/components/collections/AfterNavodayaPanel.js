@@ -3,10 +3,9 @@ import { Card, Label, Icon, Popup, Container, List } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import AddNewAfterNavodaya from "../modals/AddNewAfterNavodaya";
-import Visibility from "../modals/Visibility";
+import Visibility from "../modals/Visibility"; 
 
 import { fetchAfterNavodayaInfo, deleteAN, updateANVisibilty } from "../../actions/afternavodayainfo";
-import { fetchAllUsers } from "../../actions/other";
 
 class AfterNavodayaPanel extends React.Component {
 	state = {
@@ -21,7 +20,6 @@ class AfterNavodayaPanel extends React.Component {
 
 	componentDidMount = () => {
 		this.props.fetchAfterNavodayaInfo();
-		this.props.fetchAllUsers();
 	};
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -62,7 +60,6 @@ class AfterNavodayaPanel extends React.Component {
 		{
 			visibility.after_navodaya_rejected_list = [];
 		}
-		console.log(visibility);
 		this.props
 			.updateANVisibilty(visibility)
 			.then(() => {
@@ -155,7 +152,6 @@ class AfterNavodayaPanel extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		all_users: state.other.all_users,
 		after_navodaya: state.afternavodayainfo.after_navodaya,
 		after_navodaya_vis_type: state.afternavodayainfo.after_navodaya_vis_type,
 		after_navodaya_rejected_list: state.afternavodayainfo.after_navodaya_rejected_list
@@ -164,7 +160,6 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, 
 	{ 
-		fetchAllUsers,
 		fetchAfterNavodayaInfo, 
 		deleteAN, 
 		updateANVisibilty 
