@@ -174,7 +174,10 @@ const usersYetToJoin = [
 let users = [];
 
 class StatusPage extends React.Component {
-	state = { page: "usersJoined", results: [] };
+	state = { 
+		page: "usersJoined", 
+		results: [] 
+	};
 
 	getsearchresults = result => {
 		this.setState({

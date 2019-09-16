@@ -108,13 +108,22 @@ schema.methods.toAuthJSON = function toAuthJSON() {
 	}
 };
 
-schema.methods.generateJWT = function generateJWT() {
-	return jwt.sign(
-		{
-			username: this.username
-		},
-		process.env.JWT_SECRET
-	);
+schema.methods.generateJWT = function generateJWT(username = null) {
+	if(username) {
+		return jwt.sign(
+			{
+				username
+			},
+			process.env.JWT_SECRET
+		);		
+	} else {
+		return jwt.sign(
+			{
+				username: this.username
+			},
+			process.env.JWT_SECRET
+		);
+	}
 }
 
 export default mongoose.model("User", schema);

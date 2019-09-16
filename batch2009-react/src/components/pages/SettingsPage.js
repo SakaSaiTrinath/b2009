@@ -1,10 +1,11 @@
 import React from 'react';
-import { Grid, Header, Icon } from "semantic-ui-react";
+import { Grid, Header, Icon, Segment } from "semantic-ui-react";
+import { connect } from 'react-redux';
 
 import ResetPasswordPage from "./ResetPasswordPage";
 import ResetUsernamePage from "./ResetUsernamePage";
 
-function SettingsPage() {
+const SettingsPage = ({ username }) => {
 	return (
 		<Grid 
 			centered 
@@ -23,7 +24,20 @@ function SettingsPage() {
 			</Grid.Row>
 
 			<Grid.Row centered columns={3}>
-				<Grid.Column>
+				<Grid.Column textAlign="center">
+					<Segment color="teal" raised>
+						<Header as="h2">
+							Username
+							<Header.Subheader>{username}</Header.Subheader>
+						</Header>
+					</Segment>
+				</Grid.Column>
+			</Grid.Row>
+
+			<Grid.Row centered>
+				<Grid.Column width={2} />
+
+				<Grid.Column width={5}>
 					<Header as="h2" color="teal">
 						<Icon.Group>
 							<Icon name="user" />
@@ -33,8 +47,10 @@ function SettingsPage() {
 					</Header>
 					<ResetUsernamePage />
 				</Grid.Column>
+
+				<Grid.Column width={2} />
 			
-				<Grid.Column>
+				<Grid.Column width={5}>
 					<Header as="h2" color="teal">
 						<Icon.Group>
 							<Icon name="lock" />
@@ -44,11 +60,19 @@ function SettingsPage() {
 					</Header>
 					<ResetPasswordPage />
 				</Grid.Column>
+
+				<Grid.Column width={2} />
 			</Grid.Row>
 		</Grid>
 	);
 }
 
-export default SettingsPage;
+function mapStateToProps(state) {
+	return {
+		username: state.user.username
+	}
+}
+
+export default connect(mapStateToProps)(SettingsPage);
 
 

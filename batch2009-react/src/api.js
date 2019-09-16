@@ -10,6 +10,10 @@ export default {
 	user: {
 		login: credentials =>
 			axios.post("/api/auth", { credentials }).then(res => res.data.user),
+		resetUsername: data =>
+			axios.put("/api/auth/resetusername", { data }).then(res => res.data.user),
+		resetPassword: data =>
+			axios.put("/api/auth/resetPassword", { data }).then(res => res.data),
 
 		// Basic
 		fetchBasicInfo: () =>

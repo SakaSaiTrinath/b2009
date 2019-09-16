@@ -18,8 +18,8 @@ const store = createStore(
 );
 
 if (localStorage.batch2009) {
-	const user = { token: localStorage.batch2009 };
-	setAuthorizationHeader(localStorage.batch2009);
+	const user = JSON.parse(localStorage.batch2009);
+	setAuthorizationHeader(user.token);
 	store.dispatch(userLoggedIn(user));
 }
 
