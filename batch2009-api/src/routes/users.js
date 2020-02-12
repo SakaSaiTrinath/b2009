@@ -1,8 +1,8 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
+// import path from "path";
 import fs from "fs";
-import { map } from "p-iteration";
+// import { map } from "p-iteration";
 
 import User from "../models/User";
 import authenticate from "../middlewares/authenticate";
@@ -11,55 +11,88 @@ const router = express.Router();
 
 // Setting storage engine
 const storage = multer.diskStorage({
-  destination: './public/uploads/',
-  filename: function(req, file, cb){
-  	const filePath = './public/uploads/' + file.originalname;
-  	const mime = ['.jpeg', '.png', '.jpg'];
-	for(var i = 0; i < mime.length; ++i) {
-		let fileWithType = '.' + filePath.split('.')[1] + mime[i];
-		if(fs.existsSync(fileWithType)){
-			fs.unlinkSync(fileWithType);
-			break;
+	destination: "./public/uploads/",
+	filename: function(req, file, cb) {
+		const filePath = "./public/uploads/" + file.originalname;
+		const mime = [".jpeg", ".png", ".jpg"];
+		for (var i = 0; i < mime.length; ++i) {
+			let fileWithType = "." + filePath.split(".")[1] + mime[i];
+			if (fs.existsSync(fileWithType)) {
+				fs.unlinkSync(fileWithType);
+				break;
+			}
 		}
+		cb(null, file.originalname);
 	}
-	cb(null, file.originalname);
-  }
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || 
-    	file.mimetype === 'image/png' || 
-    	file.mimetype === 'image/jpg' ) {
-        cb(null, true);
-    } else {
-        // rejects storing a file
-        cb(null, false);
-    }
-}
+	if (
+		file.mimetype === "image/jpeg" ||
+		file.mimetype === "image/png" ||
+		file.mimetype === "image/jpg"
+	) {
+		cb(null, true);
+	} else {
+		// rejects storing a file
+		cb(null, false);
+	}
+};
 
 // Init Upload
 const upload = multer({
-  storage: storage,
-  limits:{fileSize: 1024 * 1024 * 5},
-  fileFilter: fileFilter
+	storage: storage,
+	limits: { fileSize: 1024 * 1024 * 5 },
+	fileFilter: fileFilter
 });
 
 // Profile Pic upload
-router.post("/uploadProfilePic", authenticate, upload.single('profile_pic'), (req, res) => {
+router.post(
+	"/uploadProfilePic",
+	authenticate,
+	upload.single("profile_pic"),
+	(req, res) => {
+		const { username } = req.currentUser;
+		let imagePath = req.file.originalname;
+		User.findOneAndUpdate({ username }, { profile_pic: imagePath }).then(
+			user => {
+				res.status(200).json({
+					basic_info: {
+						fullname: user.fullname,
+						profile_pic: imagePath,
+						current_status: user.current_status,
+						current_location: user.current_location,
+						articles_count: user.articles_count,
+						gallery_count: user.gallery_count,
+						nick_name: user.nick_name,
+						birthdate: user.birthdate,
+						birthmonth: user.birthmonth,
+						gender: user.gender,
+						rel_status: user.rel_status,
+						phone_number: user.phone_number,
+						home_address: user.home_address,
+						blood_group: user.blood_group,
+						known_lang: user.known_lang,
+						zodiac: user.zodiac,
+						hobbies: user.hobbies,
+						goal: user.goal
+					}
+				});
+			}
+		);
+	}
+);
+
+// Basic info
+router.get("/fetchBasicInfo", authenticate, (req, res) => {
 	const { username } = req.currentUser;
-  	let imagePath = req.file.originalname;
-  	User.findOneAndUpdate(
-  		{ username },
-  		{ profile_pic: imagePath }
-  	).then(user => {
-  		res.status(200).json({
-            basic_info: {
+	User.findOne({ username }).then(user => {
+		res.json({
+			basic_info: {
 				fullname: user.fullname,
-				profile_pic: imagePath,
+				profile_pic: user.profile_pic,
 				current_status: user.current_status,
 				current_location: user.current_location,
-				articles_count: user.articles_count,
-				gallery_count: user.gallery_count,
 				nick_name: user.nick_name,
 				birthdate: user.birthdate,
 				birthmonth: user.birthmonth,
@@ -73,36 +106,6 @@ router.post("/uploadProfilePic", authenticate, upload.single('profile_pic'), (re
 				hobbies: user.hobbies,
 				goal: user.goal
 			}
-        });
-  	});
-});
-
-
-// Basic info
-router.get("/fetchBasicInfo", authenticate, (req, res) => {
-	const { username } = req.currentUser;
-	User.findOne({ username }).then(user => {
-		res.json({ 
-			basic_info: {
-				fullname: user.fullname,
-				profile_pic: user.profile_pic,
-				current_status: user.current_status,
-				current_location: user.current_location,
-				articles_count: user.articles_count,
-				gallery_count: user.gallery_count,
-				nick_name: user.nick_name,
-				birthdate: user.birthdate,
-				birthmonth: user.birthmonth,
-				gender: user.gender,
-				rel_status: user.rel_status,
-				phone_number: user.phone_number,
-				home_address: user.home_address,
-				blood_group: user.blood_group,
-				known_lang: user.known_lang,
-				zodiac: user.zodiac,
-				hobbies: user.hobbies,
-				goal: user.goal
-			} 
 		});
 	});
 });
@@ -124,7 +127,7 @@ router.post("/updateBasicInfo", authenticate, (req, res) => {
 		rel_status,
 		zodiac
 	} = req.body.data;
-	
+
 	User.findOneAndUpdate(
 		{ username },
 		{
@@ -140,10 +143,10 @@ router.post("/updateBasicInfo", authenticate, (req, res) => {
 			nick_name,
 			phone_number,
 			rel_status,
-			zodiac	
+			zodiac
 		}
 	).then(user => {
-		res.json({ 
+		res.json({
 			basic_info: {
 				fullname: user.fullname,
 				profile_pic: user.profile_pic,
@@ -164,7 +167,7 @@ router.post("/updateBasicInfo", authenticate, (req, res) => {
 				phone_number,
 				rel_status,
 				zodiac
-			} 
+			}
 		});
 	});
 });
@@ -172,7 +175,7 @@ router.post("/updateBasicInfo", authenticate, (req, res) => {
 router.post("/updateStatus", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const { status, current_location } = req.body.data;
-	
+
 	User.findOneAndUpdate(
 		{ username },
 		{
@@ -180,7 +183,7 @@ router.post("/updateStatus", authenticate, (req, res) => {
 			current_location
 		}
 	).then(user => {
-		res.json({ 
+		res.json({
 			basic_info: {
 				fullname: user.fullname,
 				profile_pic: user.profile_pic,
@@ -236,60 +239,58 @@ router.post("/updateSchoolInfo", authenticate, (req, res) => {
 			studied_from_year,
 			studied_to_year,
 			junior_house,
-			senior_house	
+			senior_house
 		}
 	).then(user => {
-		res.json({ 
+		res.json({
 			school_info: {
 				studied_from_year,
 				studied_to_year,
 				junior_house,
 				senior_house,
 				games: user.games
-			} 
+			}
 		});
 	});
 });
 
 router.post("/addNewGame", authenticate, (req, res) => {
 	const { username } = req.currentUser;
-	User.findOneAndUpdate(
-		{ username },
-		{ $push: { games: req.body.data } }
-	).then(user => {
-		const games = user.games;
-		games.push(req.body.data);
-		res.json({ 
-			school_info: {
-				studied_from_year: user.studied_from_year,
-				studied_to_year: user.studied_to_year,
-				junior_house: user.junior_house,
-				senior_house: user.senior_house,
-				games: games
-			} 
-		});
-	});
+	User.findOneAndUpdate({ username }, { $push: { games: req.body.data } }).then(
+		user => {
+			const games = user.games;
+			games.push(req.body.data);
+			res.json({
+				school_info: {
+					studied_from_year: user.studied_from_year,
+					studied_to_year: user.studied_to_year,
+					junior_house: user.junior_house,
+					senior_house: user.senior_house,
+					games: games
+				}
+			});
+		}
+	);
 });
 
 router.post("/deleteGame", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const del_game = req.body.doc;
-	User.findOneAndUpdate(
-		{ username },
-		{ $pull: { games: del_game } }
-	).then(user => {
-		let games = user.games;
-		games = games.filter(it => it._id != del_game._id);
-		res.json({ 
-			school_info: {
-				studied_from_year: user.studied_from_year,
-				studied_to_year: user.studied_to_year,
-				junior_house: user.junior_house,
-				senior_house: user.senior_house,
-				games: games
-			} 
-		});
-	});
+	User.findOneAndUpdate({ username }, { $pull: { games: del_game } }).then(
+		user => {
+			let games = user.games;
+			games = games.filter(it => it._id != del_game._id);
+			res.json({
+				school_info: {
+					studied_from_year: user.studied_from_year,
+					studied_to_year: user.studied_to_year,
+					junior_house: user.junior_house,
+					senior_house: user.senior_house,
+					games: games
+				}
+			});
+		}
+	);
 });
 
 // AfterNavodaya info
@@ -309,39 +310,37 @@ router.get("/fetchAfterNavodayaInfo", authenticate, (req, res) => {
 router.post("/addNewAN", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const doc = req.body.data;
-	User.findOneAndUpdate(
-		{ username },
-		{ "$push": { after_navodaya: doc } }
-	).then(user => {
-		const docs = user.after_navodaya;
-		docs.push(doc);
-		res.json({
-			after_navodaya: {
-				after_navodaya: docs,
-				after_navodaya_vis_type: user.after_navodaya_vis_type,
-				after_navodaya_rejected_list: user.after_navodaya_rejected_list
-			}
-		});
-	});
+	User.findOneAndUpdate({ username }, { $push: { after_navodaya: doc } }).then(
+		user => {
+			const docs = user.after_navodaya;
+			docs.push(doc);
+			res.json({
+				after_navodaya: {
+					after_navodaya: docs,
+					after_navodaya_vis_type: user.after_navodaya_vis_type,
+					after_navodaya_rejected_list: user.after_navodaya_rejected_list
+				}
+			});
+		}
+	);
 });
 
 router.post("/deleteAN", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const doc = req.body.data;
-	User.findOneAndUpdate(
-		{ username },
-		{ "$pull": { after_navodaya: doc } }
-	).then(user => {
-		let docs = user.after_navodaya;
-		docs = docs.filter(it => it._id != doc._id);
-		res.json({
-			after_navodaya: {
-				after_navodaya: docs,
-				after_navodaya_vis_type: user.after_navodaya_vis_type,
-				after_navodaya_rejected_list: user.after_navodaya_rejected_list
-			}
-		});
-	});
+	User.findOneAndUpdate({ username }, { $pull: { after_navodaya: doc } }).then(
+		user => {
+			let docs = user.after_navodaya;
+			docs = docs.filter(it => it._id != doc._id);
+			res.json({
+				after_navodaya: {
+					after_navodaya: docs,
+					after_navodaya_vis_type: user.after_navodaya_vis_type,
+					after_navodaya_rejected_list: user.after_navodaya_rejected_list
+				}
+			});
+		}
+	);
 });
 
 // function getRejList(gender) {
@@ -349,7 +348,7 @@ router.post("/deleteAN", authenticate, (req, res) => {
 // 	User.find({ gender }, 'fullname')
 // 		.then(async users => {
 // 			console.log(users);
-// 			rej_list = await map(users, user => 
+// 			rej_list = await map(users, user =>
 // 				new Promise(resolve => resolve(user)));
 // 		});
 // 	console.log('In ', rej_list);
@@ -367,7 +366,7 @@ router.post("/updateANVisibilty", authenticate, async (req, res) => {
 
 	User.findOneAndUpdate(
 		{ username },
-		{ 
+		{
 			after_navodaya_vis_type: vis_type,
 			after_navodaya_rejected_list: rej_list
 		}
@@ -399,10 +398,7 @@ router.get("/fetchSocialAccInfo", authenticate, (req, res) => {
 router.post("/updateSocialAccInfo", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const data = req.body.data;
-	User.findOneAndUpdate(
-		{ username },
-		{ social_accounts: data }
-	).then(user => {
+	User.findOneAndUpdate({ username }, { social_accounts: data }).then(user => {
 		res.json({
 			social_acc: {
 				social_accounts: data,
@@ -422,7 +418,7 @@ router.post("/updateSocialVisibilty", authenticate, async (req, res) => {
 
 	User.findOneAndUpdate(
 		{ username },
-		{ 
+		{
 			social_accounts_vis_type: vis_type,
 			social_accounts_rejected_list: rej_list
 		}
@@ -454,10 +450,7 @@ router.get("/fetchFavouritesInfo", authenticate, (req, res) => {
 router.post("/updateFavouritesInfo", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const { data } = req.body;
-	User.findOneAndUpdate(
-		{ username },
-		{ favourites: data }
-	).then(user => {
+	User.findOneAndUpdate({ username }, { favourites: data }).then(user => {
 		res.json({
 			favourites: {
 				favourites: data,
@@ -471,39 +464,37 @@ router.post("/updateFavouritesInfo", authenticate, (req, res) => {
 router.post("/addNewFieldInFavourites", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const { data } = req.body;
-	User.findOneAndUpdate(
-		{ username },
-		{ "$push": { favourites: data } }
-	).then(user => {
-		const docs = user.favourites;
-		docs.push(data);
-		res.json({
-			favourites: {
-				favourites: docs,
-				favourites_vis_type: user.favourites_vis_type,
-				favourites_rejected_list: user.favourites_rejected_list
-			}
-		});
-	});
+	User.findOneAndUpdate({ username }, { $push: { favourites: data } }).then(
+		user => {
+			const docs = user.favourites;
+			docs.push(data);
+			res.json({
+				favourites: {
+					favourites: docs,
+					favourites_vis_type: user.favourites_vis_type,
+					favourites_rejected_list: user.favourites_rejected_list
+				}
+			});
+		}
+	);
 });
 
 router.post("/deleteFavField", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const { data } = req.body;
-	User.findOneAndUpdate(
-		{ username },
-		{ "$pull": { favourites: data } }
-	).then(user => {
-		let docs = user.favourites;
-		docs = docs.filter(it => it._id != data._id);
-		res.json({
-			favourites: {
-				favourites: docs,
-				favourites_vis_type: user.favourites_vis_type,
-				favourites_rejected_list: user.favourites_rejected_list
-			}
-		});
-	});
+	User.findOneAndUpdate({ username }, { $pull: { favourites: data } }).then(
+		user => {
+			let docs = user.favourites;
+			docs = docs.filter(it => it._id != data._id);
+			res.json({
+				favourites: {
+					favourites: docs,
+					favourites_vis_type: user.favourites_vis_type,
+					favourites_rejected_list: user.favourites_rejected_list
+				}
+			});
+		}
+	);
 });
 
 router.post("/updateFavVisibilty", authenticate, async (req, res) => {
@@ -513,7 +504,7 @@ router.post("/updateFavVisibilty", authenticate, async (req, res) => {
 
 	User.findOneAndUpdate(
 		{ username },
-		{ 
+		{
 			favourites_vis_type: vis_type,
 			favourites_rejected_list: rej_list
 		}
@@ -545,10 +536,7 @@ router.get("/fetchFirstThingsInfo", authenticate, (req, res) => {
 router.post("/updateFirstThingsInfo", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const { data } = req.body;
-	User.findOneAndUpdate(
-		{ username },
-		{ first_things: data }
-	).then(user => {
+	User.findOneAndUpdate({ username }, { first_things: data }).then(user => {
 		res.json({
 			firstthings: {
 				firstthings: data,
@@ -562,39 +550,37 @@ router.post("/updateFirstThingsInfo", authenticate, (req, res) => {
 router.post("/addNewFieldInFirstThings", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const { data } = req.body;
-	User.findOneAndUpdate(
-		{ username },
-		{ "$push": { first_things: data } }
-	).then(user => {
-		const docs = user.first_things;
-		docs.push(data);
-		res.json({
-			firstthings: {
-				firstthings: docs,
-				first_things_vis_type: user.first_things_vis_type,
-				first_things_rejected_list: user.first_things_rejected_list
-			}
-		});
-	});
+	User.findOneAndUpdate({ username }, { $push: { first_things: data } }).then(
+		user => {
+			const docs = user.first_things;
+			docs.push(data);
+			res.json({
+				firstthings: {
+					firstthings: docs,
+					first_things_vis_type: user.first_things_vis_type,
+					first_things_rejected_list: user.first_things_rejected_list
+				}
+			});
+		}
+	);
 });
 
 router.post("/deleteFTField", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const { data } = req.body;
-	User.findOneAndUpdate(
-		{ username },
-		{ "$pull": { first_things: data } }
-	).then(user => {
-		let docs = user.first_things;
-		docs = docs.filter(it => it._id != data._id);
-		res.json({
-			firstthings: {
-				firstthings: docs,
-				first_things_vis_type: user.first_things_vis_type,
-				first_things_rejected_list: user.first_things_rejected_list
-			}
-		});
-	});
+	User.findOneAndUpdate({ username }, { $pull: { first_things: data } }).then(
+		user => {
+			let docs = user.first_things;
+			docs = docs.filter(it => it._id != data._id);
+			res.json({
+				firstthings: {
+					firstthings: docs,
+					first_things_vis_type: user.first_things_vis_type,
+					first_things_rejected_list: user.first_things_rejected_list
+				}
+			});
+		}
+	);
 });
 
 router.post("/updateFTVisibilty", authenticate, async (req, res) => {
@@ -604,7 +590,7 @@ router.post("/updateFTVisibilty", authenticate, async (req, res) => {
 
 	User.findOneAndUpdate(
 		{ username },
-		{ 
+		{
 			first_things_vis_type: vis_type,
 			first_things_rejected_list: rej_list
 		}
@@ -620,18 +606,37 @@ router.post("/updateFTVisibilty", authenticate, async (req, res) => {
 });
 
 router.get("/fetchAllUsers", authenticate, (req, res) => {
-	User.find({}, 'fullname profile_pic').then(users => {
+	User.find({}, "fullname profile_pic").then(users => {
 		res.json({ all_users: users });
 	});
-}); 
+});
 
 router.get("/fetchAllUsersFull", authenticate, (req, res) => {
 	User.find(
-		{}, 
-		'isJoined profile_pic fullname current_status studied_from_year studied_to_year current_location gender birthmonth birthdate '
+		{},
+		"isJoined profile_pic fullname current_status studied_from_year studied_to_year current_location gender birthmonth birthdate blood_group"
 	).then(users => {
 		res.json({ all_users: users });
 	});
+});
+
+router.post("/sendUserResponse", authenticate, (req, res) => {
+	const { username } = req.currentUser;
+	// console.log(req.body);
+	const { message_type, title, message } = req.body;
+	const obj = {
+		message_type,
+		title,
+		message,
+		timestamp: Date.now()
+	};
+	User.findOneAndUpdate({ username }, { $push: { responses: obj } })
+		.then(() => {
+			res.json({ success: true });
+		})
+		.catch(err => {
+			res.status(400).json({ success: false, message: err });
+		});
 });
 
 export default router;
