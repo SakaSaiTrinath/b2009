@@ -1,7 +1,12 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
 import InlineError from "../messages/InlineError";
 import FormSuccess from "../messages/FormSuccess";
+
+import { sendUserResponse } from "../../actions/other";
 
 class ContactForm extends React.Component {
 	state = {
@@ -10,9 +15,21 @@ class ContactForm extends React.Component {
 			type: "",
 			message: ""
 		},
+		isFormSuccess: false,
 		errors: {},
 		loading: false
 	};
+
+	componentDidUpdate(prevProps, prevState) {
+		if (
+			prevState.isFormSuccess !== this.state.isFormSuccess &&
+			this.state.isFormSuccess
+		) {
+			setTimeout(() => {
+				this.setIsFormSuccess();
+			}, 1000);
+		}
+	}
 
 	onChange = (e, { name, value }) => {
 		this.setState({
@@ -26,11 +43,30 @@ class ContactForm extends React.Component {
 		this.setState({
 			errors
 		});
+		const { title, type, message } = this.state.data;
+		const { username } = this.props;
+		const sendObj = {
+			title,
+			type,
+			message,
+			username
+		};
 		if (Object.keys(errors).length === 0) {
-			this.setState({
-				data: { title: "", type: "", message: "" }
+			this.props.sendUserResponse(sendObj).then(() => {
+				this.setState({
+					data: { title: "", type: "", message: "" },
+					isFormSuccess: true
+				});
 			});
+			/* this.setState({
+				data: { title: "", type: "", message: "" },
+				isFormSuccess: true
+			}); */
 		}
+	};
+
+	setIsFormSuccess = () => {
+		this.setState({ isFormSuccess: false });
 	};
 
 	validate = data => {
@@ -42,7 +78,7 @@ class ContactForm extends React.Component {
 	};
 
 	render() {
-		const { data, errors } = this.state;
+		const { data, errors, isFormSuccess } = this.state;
 
 		return (
 			<Form size="large" onSubmit={this.onSubmit} error={!!errors}>
@@ -104,10 +140,10 @@ class ContactForm extends React.Component {
 					error={!!errors.message}
 				/>
 
-				{
-					// if success from server this should be displayed
+				{// if success from server this should be displayed
+				isFormSuccess && (
 					<FormSuccess text="You've successfully sent your response!" />
-				}
+				)}
 				<Form.Button color="teal" fluid size="large">
 					Send
 				</Form.Button>
@@ -116,4 +152,18 @@ class ContactForm extends React.Component {
 	}
 }
 
-export default ContactForm;
+ContactForm.propTypes = {
+	username: PropTypes.string.isRequired,
+	sendUserResponse: PropTypes.func.isRequired
+};
+
+function mapStateToProps(state) {
+	return {
+		username: state.user.username
+	};
+}
+
+export default connect(
+	mapStateToProps,
+	{ sendUserResponse }
+)(ContactForm);

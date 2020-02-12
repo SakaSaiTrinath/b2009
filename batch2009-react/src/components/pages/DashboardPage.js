@@ -9,9 +9,10 @@ import SideBar from "../utilities/SideBar";
 
 import AnnouncementsPage from "./AnnouncementsPage";
 import StatusPage from "./StatusPage";
-import FeedPage from "./FeedPage";
+// import FeedPage from "./FeedPage";
+import BloodGroupsPage from "./BloodGroupsPage";
 import ProfilePage from "./ProfilePage";
-import SiteGalleryPage from "./SiteGalleryPage";
+// import SiteGalleryPage from "./SiteGalleryPage";
 import ContactPage from "./ContactPage";
 import SettingsPage from "./SettingsPage";
 import DefaultDashboard from "./DefaultDashboard";
@@ -48,6 +49,20 @@ class DashboardPage extends React.Component {
 		});
 	};
 
+	/* case "feed":
+	return [
+		<div key={this.state.activeItem}>
+			<FeedPage />
+		</div>
+	]; */
+
+	/* case "sitegallery":
+	return [
+		<div key={this.state.activeItem}>
+			<SiteGalleryPage />
+		</div>
+	]; */
+
 	returnSwitch = param => {
 		switch (param) {
 			case "announcements":
@@ -62,22 +77,16 @@ class DashboardPage extends React.Component {
 						<StatusPage />
 					</div>
 				];
-			case "feed":
+			case "bloodgroups":
 				return [
 					<div key={this.state.activeItem}>
-						<FeedPage />
+						<BloodGroupsPage />
 					</div>
 				];
 			case "profile":
 				return [
 					<div key={this.state.activeItem}>
 						<ProfilePage />
-					</div>
-				];
-			case "sitegallery":
-				return [
-					<div key={this.state.activeItem}>
-						<SiteGalleryPage />
 					</div>
 				];
 			case "contact":
@@ -123,9 +132,7 @@ class DashboardPage extends React.Component {
 
 					<Sidebar.Pusher>
 						<Segment basic>
-							<Responsive
-								minWidth={Responsive.onlyTablet.minWidth}
-							>
+							<Responsive minWidth={Responsive.onlyTablet.minWidth}>
 								<NavBar
 									activeItem={activeItem}
 									handleButtonClick={this.handleButtonClick}
@@ -141,9 +148,7 @@ class DashboardPage extends React.Component {
 											minHeight: window.innerHeight
 										}}
 									>
-										{this.returnSwitch(
-											this.state.activeItem
-										)}
+										{this.returnSwitch(this.state.activeItem)}
 										{/* this.props.children */}
 									</Segment>
 								</div>

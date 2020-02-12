@@ -103,7 +103,7 @@ class InfoPanels extends Component {
 	handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
 	handleChange = (e, { value }) => this.setState({ activeItem: value });
-	/*handleChange = (e, data) => {alert(`${data.value}`)}*/
+	/* handleChange = (e, data) => {alert(`${data.value}`)} */
 
 	returnSwitch = param => {
 		switch (param) {
@@ -149,18 +149,6 @@ class InfoPanels extends Component {
 						<FirstThingsPanel />
 					</div>
 				];
-			case "articles":
-				return [
-					<div key={this.state.activeItem}>
-						<ArticlesPanel />
-					</div>
-				];
-			case "gallery":
-				return [
-					<div key={this.state.activeItem}>
-						<GalleryPanel />
-					</div>
-				];
 			default:
 				return [
 					<div key={this.state.activeItem}>
@@ -181,10 +169,7 @@ class InfoPanels extends Component {
 							<Menu.Item
 								icon="info"
 								name="basic"
-								active={
-									activeItem === "basic" ||
-									activeItem === "default"
-								}
+								active={activeItem === "basic" || activeItem === "default"}
 								onClick={this.handleItemClick}
 							/>
 							<Menu.Item
@@ -219,7 +204,7 @@ class InfoPanels extends Component {
 							/>
 
 							{/* Menu right side */}
-							<Menu.Menu position="right">
+							{/* <Menu.Menu position="right">
 								<Menu.Item
 									icon="newspaper"
 									name="articles"
@@ -232,12 +217,10 @@ class InfoPanels extends Component {
 									active={activeItem === "gallery"}
 									onClick={this.handleItemClick}
 								/>
-							</Menu.Menu>
+							</Menu.Menu> */}
 						</Menu>
 
-						<Segment attached="bottom">
-							{this.returnSwitch(activeItem)}
-						</Segment>
+						<Segment attached="bottom">{this.returnSwitch(activeItem)}</Segment>
 					</Segment>
 				</Responsive>
 
@@ -272,6 +255,5 @@ class InfoPanels extends Component {
 		);
 	}
 }
-
 
 export default withRouter(InfoPanels);

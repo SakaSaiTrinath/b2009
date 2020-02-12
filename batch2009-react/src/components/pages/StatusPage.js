@@ -1,17 +1,18 @@
 import React from "react";
-import { Header, Grid, Card, Icon, Image, Button } from "semantic-ui-react";
+import { Header, Grid, Card, Image, Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 import dImg from "../images/profile-dummy.jpg";
 import SearchBar from "../utilities/SearchBar";
-import { fetchAllUsersFull } from '../../actions/other';
+import { fetchAllUsersFull } from "../../actions/other";
 
 let users = [];
 
 class StatusPage extends React.Component {
-	state = { 
-		page: "usersJoined", 
+	state = {
+		page: "usersJoined",
 		results: [],
 		usersJoined: [],
 		usersYetToJoin: []
@@ -21,20 +22,24 @@ class StatusPage extends React.Component {
 		this.props.fetchAllUsersFull();
 	}
 
-	componentDidUpdate(prevProps, prevState) {
-		if(this.props.all_users !== prevProps.all_users && this.props.all_users) {
+	componentDidUpdate(prevProps) {
+		if (this.props.all_users !== prevProps.all_users && this.props.all_users) {
 			const { usersYetToJoin, usersJoined } = this.state;
 			this.props.all_users.map(user => {
-				if(user.isJoined) {
+				if (user.isJoined) {
 					usersJoined.push(user);
 				} else {
 					usersYetToJoin.push(user);
 				}
 				return null;
 			});
-			this.setState({ usersJoined, usersYetToJoin });
+			this.setState({ usersJoined, usersYetToJoin }); // eslint-disable-line
 		}
 	}
+
+	getsearchresults = results => {
+		this.setState({ results });
+	};
 
 	handlePage = (e, { name }) => {
 		this.setState({
@@ -42,16 +47,19 @@ class StatusPage extends React.Component {
 		});
 	};
 
-	getsearchresults = results => {
-		this.setState({ results });
-	}
-
 	render() {
 		const { page, usersJoined, usersYetToJoin, results } = this.state;
 
 		let source = [];
-		if(this.props.all_users) {
-			source = this.props.all_users.map(user => ({
+		if (page === "usersJoined") {
+			source = usersJoined.map(user => ({
+				title: user.fullname,
+				description: user.current_status,
+				image: user.profile_pic || dImg,
+				price: `${user.studied_from_year} - ${user.studied_to_year}`
+			}));
+		} else {
+			source = usersYetToJoin.map(user => ({
 				title: user.fullname,
 				description: user.current_status,
 				image: user.profile_pic || dImg,
@@ -59,30 +67,29 @@ class StatusPage extends React.Component {
 			}));
 		}
 
-		if(results.length > 0 && this.props.all_users) {
+		if (results.length > 0 && this.props.all_users) {
 			users = [];
-			for (var i = results.length - 1; i >= 0; i--) {
-				for (var j = this.props.all_users.length - 1; j >= 0; j--) {
-					if(this.props.all_users[j].fullname === results[i].title) {
+			for (let i = results.length - 1; i >= 0; i -= 1) {
+				for (let j = this.props.all_users.length - 1; j >= 0; j -= 1) {
+					if (this.props.all_users[j].fullname === results[i].title) {
 						users.push(this.props.all_users[j]);
 					}
 				}
 			}
-		} else if(page === "usersJoined") {
+		} else if (page === "usersJoined") {
 			users = usersJoined;
 		} else {
 			users = usersYetToJoin;
 		}
 
 		return (
-			<Grid
-				textAlign="center"
-				stackable
-			>
+			<Grid stackable>
 				{/* Page Title */}
 				<Grid.Row centered>
-					<Grid.Column width={8}>
+					<Grid.Column textAlign="left" width={10}>
 						<Header as="h1" content="Status Page" color="teal" />
+					</Grid.Column>
+					<Grid.Column width={4}>
 						<SearchBar
 							getsearchresults={this.getsearchresults}
 							source={source}
@@ -111,8 +118,8 @@ class StatusPage extends React.Component {
 					</Grid.Column>
 				</Grid.Row>
 
-
-				<Grid.Row 
+				<Grid.Row
+					textAlign="center"
 					style={{
 						minHeight: window.innerHeight - 350
 					}}
@@ -120,55 +127,55 @@ class StatusPage extends React.Component {
 					<Grid.Column>
 						<Grid stackable centered textAlign="center">
 							<Grid.Row align="middle">
-								{users && users.length > 0 ? users.map(user => (
-									<Grid.Column width={4} key={user._id}>
-										<Card
-											color="teal"
-											style={{
-												marginTop: "10px",
-												marginBottom: "10px"
-											}}
-											as={Link}
-											to="/profile#"
-										>
-											<Card.Content>
-												<Image
-													src={user.profile_pic || dImg}
-													floated="right"
-													size="mini"
-												/>
-												<Card.Header>
-													{user.fullname}
-												</Card.Header>
-												<Card.Meta>
-													<span className="date">
-														{user.studied_from_year} {" - "} {user.studied_to_year}
-													</span>
-												</Card.Meta>
-												<Card.Description>
-													{user.current_status}
-												</Card.Description>
-											</Card.Content>
-											<Card.Content extra>
-												<div className="ui two buttons">
-													<Button basic color="teal">
-														<Icon name="newspaper" />
-														Articles
-														{"	"} 16
-													</Button>
+								{users && users.length > 0
+									? users.map(user => (
+											// eslint-disable-next-line
+											<Grid.Column width={4} key={user._id}>
+												<Card
+													color="teal"
+													style={{
+														marginTop: "10px",
+														marginBottom: "10px"
+													}}
+													as={Link}
+													to="/profile#"
+												>
+													<Card.Content>
+														<Image
+															src={user.profile_pic || dImg}
+															floated="right"
+															size="mini"
+														/>
+														<Card.Header>{user.fullname}</Card.Header>
+														<Card.Meta>
+															<span className="date">
+																{user.studied_from_year} {" - "}{" "}
+																{user.studied_to_year}
+															</span>
+														</Card.Meta>
+														<Card.Description>
+															{user.current_status}
+														</Card.Description>
+													</Card.Content>
+													{/* <Card.Content extra>
+														<div className="ui two buttons">
+															<Button basic color="teal">
+																<Icon name="newspaper" />
+																Articles
+																{"	"} 16
+															</Button>
 
-													<Button basic color="teal">
-														<Icon name="images" />
-														Gallery
-														{"	"} 25
-													</Button>
-												</div>
-											</Card.Content>
-										</Card>
-									</Grid.Column>
-								)) : (
-									"No users!"
-								)}
+															<Button basic color="teal">
+																<Icon name="images" />
+																Gallery
+																{"	"} 25
+															</Button>
+														</div>
+													</Card.Content> */}
+												</Card>
+											</Grid.Column>
+									  ))
+									: "No users!"}
 							</Grid.Row>
 						</Grid>
 					</Grid.Column>
@@ -178,10 +185,18 @@ class StatusPage extends React.Component {
 	}
 }
 
+StatusPage.propTypes = {
+	all_users: PropTypes.arrayOf(PropTypes.object).isRequired,
+	fetchAllUsersFull: PropTypes.func.isRequired
+};
+
 function mapStateToProps(state) {
 	return {
 		all_users: state.other.all_users
-	}
+	};
 }
 
-export default connect(mapStateToProps, { fetchAllUsersFull })(StatusPage);
+export default connect(
+	mapStateToProps,
+	{ fetchAllUsersFull }
+)(StatusPage);

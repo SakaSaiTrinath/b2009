@@ -1,3 +1,5 @@
+/* This tab is not added in website */
+
 import React from "react";
 import { Grid } from "semantic-ui-react";
 import Article from "../utilities/Article";

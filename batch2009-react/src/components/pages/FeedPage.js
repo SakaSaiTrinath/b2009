@@ -1,3 +1,5 @@
+/* This page is not added in the website */
+
 import React from "react";
 import { Header, Grid } from "semantic-ui-react";
 

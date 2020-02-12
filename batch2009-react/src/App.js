@@ -1,5 +1,6 @@
 import React from "react";
 import { Switch } from "react-router-dom";
+
 import WelcomePage from "./components/pages/WelcomePage";
 import DashboardPage from "./components/pages/DashboardPage";
 import Page404 from "./components/pages/Page404";
@@ -36,6 +37,12 @@ const subroutes = [
 		path: "/feed"
 	},
 	{
+		id: "bloodgroups",
+		exact: true,
+		strict: true,
+		path: "/bloodgroups"
+	},
+	{
 		id: "profile",
 		exact: true,
 		path: "/profile"
@@ -60,11 +67,18 @@ const subroutes = [
 	}
 ];
 
-const App = ({ location }) => (
+const App = (
+	{ location } // eslint-disable-line
+) => (
 	<div>
 		<Switch>
 			<GuestRoute location={location} path="/" exact component={WelcomePage} />
-			<UserRoute location={location} path="/article" exact component={ArticlePage} />
+			<UserRoute
+				location={location}
+				path="/article"
+				exact
+				component={ArticlePage}
+			/>
 			{subroutes.map(route => (
 				<UserRoute
 					location={location}
