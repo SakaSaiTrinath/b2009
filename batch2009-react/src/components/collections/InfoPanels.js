@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { Menu, Segment, Responsive, Button, Dropdown } from "semantic-ui-react";
 import BasicInfoPanel from "./BasicInfoPanel";
 import SchoolInfoPanel from "./SchoolInfoPanel";
@@ -7,8 +9,10 @@ import AfterNavodayaPanel from "./AfterNavodayaPanel";
 import SocialAccountsPanel from "./SocialAccountsPanel";
 import FavouritesPanel from "./FavouritesPanel";
 import FirstThingsPanel from "./FirstThingsPanel";
-import ArticlesPanel from "./ArticlesPanel";
-import GalleryPanel from "./GalleryPanel";
+// import ArticlesPanel from "./ArticlesPanel";
+// import GalleryPanel from "./GalleryPanel";
+
+import { fetchAllUsers } from "../../actions/other";
 
 const routes = [
 	{
@@ -70,7 +74,7 @@ const routes = [
 		icon: "first order",
 		text: "First Things",
 		value: "firstthings"
-	},
+	} /* ,
 	{
 		id: ArticlesPanel,
 		path: "/myprofile/articles",
@@ -90,7 +94,7 @@ const routes = [
 		icon: "photo",
 		text: "Gallery",
 		value: "gallery"
-	}
+	} */
 ];
 
 class InfoPanels extends Component {
@@ -98,6 +102,10 @@ class InfoPanels extends Component {
 		super(props);
 
 		this.state = { activeItem: "basic" };
+	}
+
+	componentDidMount() {
+		this.props.fetchAllUsers();
 	}
 
 	handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -110,49 +118,73 @@ class InfoPanels extends Component {
 			case "default":
 				return [
 					<div key={this.state.activeItem}>
-						<BasicInfoPanel />
+						<BasicInfoPanel
+							isCurrentUser={this.props.isCurrentUser}
+							user_username={this.props.user_username}
+						/>
 					</div>
 				];
 			case "basic":
 				return [
 					<div key={this.state.activeItem}>
-						<BasicInfoPanel />
+						<BasicInfoPanel
+							isCurrentUser={this.props.isCurrentUser}
+							user_username={this.props.user_username}
+						/>
 					</div>
 				];
 			case "school":
 				return [
 					<div key={this.state.activeItem}>
-						<SchoolInfoPanel />
+						<SchoolInfoPanel
+							isCurrentUser={this.props.isCurrentUser}
+							user_username={this.props.user_username}
+						/>
 					</div>
 				];
 			case "afternavodaya":
 				return [
 					<div key={this.state.activeItem}>
-						<AfterNavodayaPanel />
+						<AfterNavodayaPanel
+							isCurrentUser={this.props.isCurrentUser}
+							user_username={this.props.user_username}
+						/>
 					</div>
 				];
 			case "social":
 				return [
 					<div key={this.state.activeItem}>
-						<SocialAccountsPanel />
+						<SocialAccountsPanel
+							isCurrentUser={this.props.isCurrentUser}
+							user_username={this.props.user_username}
+						/>
 					</div>
 				];
 			case "favourites":
 				return [
 					<div key={this.state.activeItem}>
-						<FavouritesPanel />
+						<FavouritesPanel
+							isCurrentUser={this.props.isCurrentUser}
+							user_username={this.props.user_username}
+						/>
 					</div>
 				];
 			case "firstthings":
 				return [
 					<div key={this.state.activeItem}>
-						<FirstThingsPanel />
+						<FirstThingsPanel
+							isCurrentUser={this.props.isCurrentUser}
+							user_username={this.props.user_username}
+						/>
 					</div>
 				];
 			default:
 				return [
 					<div key={this.state.activeItem}>
-						<BasicInfoPanel />
+						<BasicInfoPanel
+							isCurrentUser={this.props.isCurrentUser}
+							user_username={this.props.user_username}
+						/>
 					</div>
 				];
 		}
@@ -220,7 +252,9 @@ class InfoPanels extends Component {
 							</Menu.Menu> */}
 						</Menu>
 
-						<Segment attached="bottom">{this.returnSwitch(activeItem)}</Segment>
+						<Segment attached="bottom" style={{ minHeight: "10rem" }}>
+							{this.returnSwitch(activeItem)}
+						</Segment>
 					</Segment>
 				</Responsive>
 
@@ -247,7 +281,7 @@ class InfoPanels extends Component {
 							</Dropdown.Menu>
 						</Dropdown>
 					</Button.Group>
-					<div attached="bottom" style={{ marginTop: "5px" }}>
+					<div attached="bottom" style={{ marginTop: "10px" }}>
 						{this.returnSwitch(activeItem)}
 					</div>
 				</Responsive>
@@ -256,4 +290,15 @@ class InfoPanels extends Component {
 	}
 }
 
-export default withRouter(InfoPanels);
+InfoPanels.propTypes = {
+	isCurrentUser: PropTypes.bool.isRequired,
+	user_username: PropTypes.string.isRequired,
+	fetchAllUsers: PropTypes.func.isRequired
+};
+
+export default withRouter(
+	connect(
+		null,
+		{ fetchAllUsers }
+	)(InfoPanels)
+);

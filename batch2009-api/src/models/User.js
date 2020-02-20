@@ -10,31 +10,31 @@ const schema = new mongoose.Schema({
 	// basic info
 	profile_pic: { type: String },
 	fullname: { type: String, required: true },
-	current_status: { type: String, default: "---" },
+	current_status: { type: String },
 	current_location: {
-		country: { type: String, default: "---" },
-		state: { type: String, default: "---" },
-		city: { type: String, default: "---" }
+		country: { type: String },
+		state: { type: String },
+		city: { type: String }
 	},
-	nick_name: { type: String, default: "---" },
-	birthdate: { type: Number, default: 1 },
-	birthmonth: { type: String, default: 1 },
-	gender: { type: String, default: "---", required: true },
-	rel_status: { type: String, default: "---" },
-	phone_number: { type: Number, default: 9876543210 },
-	home_address: { type: String, default: "---" },
-	blood_group: { type: String, default: "---" },
-	known_lang: { type: String, default: "---" },
-	zodiac: { type: String, default: "---" },
-	hobbies: { type: String, default: "---" },
-	goal: { type: String, default: "---" },
+	nick_name: { type: String },
+	birthdate: { type: Number },
+	birthmonth: { type: String },
+	gender: { type: String, required: true },
+	rel_status: { type: String },
+	phone_number: { type: Number },
+	home_address: { type: String },
+	blood_group: { type: String },
+	known_lang: { type: String },
+	zodiac: { type: String },
+	hobbies: { type: String },
+	goal: { type: String },
 	basic_other: [{ field: String, value: String }],
 
 	// 	school info
-	studied_from_year: { type: String, default: 2000 },
-	studied_to_year: { type: String, default: 3000 },
-	junior_house: { type: String, default: "---" },
-	senior_house: { type: String, default: "---" },
+	studied_from_year: { type: String },
+	studied_to_year: { type: String },
+	junior_house: { type: String },
+	senior_house: { type: String },
 	games: [{ game_name: String, level_reached: String, no_of_reached: String }],
 
 	// afternvavodaya
@@ -46,37 +46,37 @@ const schema = new mongoose.Schema({
 	// social_accounts: [{	account_name: String, account_username: String, account_url: String }],
 	social_accounts: {
 		facebook: {
-			username: { type: String, default: "---" },
-			url: { type: String, default: "---" }
+			username: { type: String },
+			url: { type: String }
 		},
 		whatsapp: {
-			number: { type: String, default: 9876543210 }
+			number: { type: String }
 		},
 		twitter: {
-			username: { type: String, default: "---" },
-			url: { type: String, default: "---" }
+			username: { type: String },
+			url: { type: String }
 		},
 		email: {
-			mail_address: { type: String, default: "---" }
+			mail_address: { type: String }
 		},
 		instagram: {
-			username: { type: String, default: "---" }
+			username: { type: String }
 		},
 		linkedin: {
-			username: { type: String, default: "---" },
-			url: { type: String, default: "---" }
+			username: { type: String },
+			url: { type: String }
 		},
 		youtube: {
-			username: { type: String, default: "---" },
-			url: { type: String, default: "---" }
+			username: { type: String },
+			url: { type: String }
 		},
 		pinterest: {
-			username: { type: String, default: "---" },
-			url: { type: String, default: "---" }
+			username: { type: String },
+			url: { type: String }
 		},
 		github: {
-			username: { type: String, default: "---" },
-			url: { type: String, default: "---" }
+			username: { type: String },
+			url: { type: String }
 		}
 	},
 	social_accounts_vis_type: { type: String, default: "All" },
@@ -133,6 +133,10 @@ schema.methods.generateJWT = function generateJWT(username = null) {
 			process.env.JWT_SECRET
 		);
 	}
+};
+
+schema.methods.isNotJoined = function isNotJoined() {
+	return this.isJoined;
 };
 
 export default mongoose.model("User", schema);

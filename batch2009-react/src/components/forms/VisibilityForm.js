@@ -1,12 +1,22 @@
 import React, { Component } from "react";
-import { Form, Dropdown, Header, Radio, Message, Segment, Label, Button, Divider } from "semantic-ui-react";
+import {
+	Form,
+	Dropdown,
+	Header,
+	Radio,
+	Message,
+	Segment,
+	Label,
+	Button,
+	Divider
+} from "semantic-ui-react";
 import { connect } from "react-redux";
 import profileDummyPic from "../images/profile-dummy.jpg";
 
 // import myImg from "../images/my pic.jpg";
 
 class VisibilityForm extends Component {
-	state = { 
+	state = {
 		visibility: {
 			vis_type: this.props.vis_type,
 			rej_list: this.props.rej_list || []
@@ -16,85 +26,112 @@ class VisibilityForm extends Component {
 		select_except_options: []
 	};
 
-	componentDidMount= () => {
-		if(this.state.visibility.rej_list && 
-			this.state.visibility.rej_list.length > 0) 
-		{
-			let { vis_type, rej_list } = this.state.visibility;
-			let { all_users } = this.props;
-			let list = [];
+	componentDidMount = () => {
+		if (
+			this.state.visibility.rej_list &&
+			this.state.visibility.rej_list.length > 0
+		) {
+			const { vis_type, rej_list } = this.state.visibility;
+			const { all_users } = this.props;
+			const list = [];
 
-			if(vis_type === 'select') {
+			if (vis_type === "select") {
 				all_users.map(ele => {
-					let check = rej_list.find(rj => rj === ele.fullname);
-					if(!check) {
+					const check = rej_list.find(rj => rj === ele.fullname);
+					if (!check) {
 						let prf_pic = profileDummyPic;
-						if(ele.profile_pic) prf_pic = ele.profile_pic;
-						let obj = { key: ele._id, text: ele.fullname, value: ele.fullname, image: { avatar: true, src: prf_pic } };
+						if (ele.profile_pic) prf_pic = ele.profile_pic;
+						/* eslint-disable-next-line */
+						const obj = {
+							key: ele._id,
+							text: ele.fullname,
+							value: ele.fullname,
+							image: { avatar: true, src: prf_pic }
+						};
 						list.push(obj);
 					}
 					return null;
 				});
+				/* eslint-disable-next-line */
 				this.setState({ select_options: list });
-			} else if(vis_type === 'select_except') {
-				let select_except_options = this.makeDropdownList(this.state.visibility.rej_list);
+			} else if (vis_type === "select_except") {
+				const select_except_options = this.makeDropdownList(
+					this.state.visibility.rej_list
+				);
+				/* eslint-disable-next-line */
 				this.setState({ select_except_options });
 			}
-		} else if(this.state.visibility.rej_list && 
-			this.state.visibility.rej_list.length === 0) 
-		{
-			let allUserOptions = this.makeDropdownList(this.props.all_users);
-			this.setState({ select_options: allUserOptions, select_except_options: allUserOptions });
+		} else if (
+			this.state.visibility.rej_list &&
+			this.state.visibility.rej_list.length === 0
+		) {
+			const allUserOptions = this.makeDropdownList(this.props.all_users);
+			/* eslint-disable-next-line */
+			this.setState({
+				select_options: allUserOptions,
+				select_except_options: allUserOptions
+			});
 		}
 	};
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if(prevState.visibility !== this.state.visibility) {
-			this.props.updateState(this.state.visibility);			
+		if (prevState.visibility !== this.state.visibility) {
+			this.props.updateState(this.state.visibility);
 		}
 
-		if(this.props.vis_type !== prevProps.vis_type ||
-			this.props.rej_list !== prevProps.rej_list) {
+		if (
+			this.props.vis_type !== prevProps.vis_type ||
+			this.props.rej_list !== prevProps.rej_list
+		) {
+			/* eslint-disable-next-line */
 			this.setState({
-				visibility: { 
+				visibility: {
 					vis_type: this.props.vis_type,
 					rej_list: this.props.rej_list
-				} 
+				}
 			});
 		}
 
-		if(this.state.select_options !== prevState.select_options) {
-			let { select_options } = this.state;
-			let { all_users } = this.props;
-			let rej_list = [];
+		if (this.state.select_options !== prevState.select_options) {
+			const { select_options } = this.state;
+			const { all_users } = this.props;
+			const rej_list = [];
 			all_users.map(ele => {
-				let check = select_options.find(se => se === ele.fullname);
-				if(!check) rej_list.push(ele.fullname);
+				const check = select_options.find(se => se === ele.fullname);
+				if (!check) rej_list.push(ele.fullname);
 				return null;
 			});
+			/* eslint-disable-next-line */
 			this.setState({ visibility: { ...this.state.visibility, rej_list } });
 		}
 
-		if(this.state.select_except_options !== prevState.select_except_options) {
-			let { select_except_options } = this.state;
-			let { all_users } = this.props;
-			let rej_list = [];
+		if (this.state.select_except_options !== prevState.select_except_options) {
+			const { select_except_options } = this.state;
+			const { all_users } = this.props;
+			const rej_list = [];
 			all_users.map(ele => {
-				let check = select_except_options.find(se => se === ele.fullname);
-				if(check) rej_list.push(ele.fullname);
+				const check = select_except_options.find(se => se === ele.fullname);
+				if (check) rej_list.push(ele.fullname);
 				return null;
 			});
+			/* eslint-disable-next-line */
 			this.setState({ visibility: { ...this.state.visibility, rej_list } });
 		}
 	};
 
 	makeDropdownList = list => {
-		if(!list && list.length === 0) return;
-		let res_list = [];
+		if (!list && list.length === 0) return;
+		const res_list = [];
 		list.map(li => {
 			let prf_pic = profileDummyPic;
-			if(li.profile_pic) prf_pic = li.profile_pic;
-			let obj = { key: li._id, text: li.fullname, value: li.fullname, image: { avatar: true, src: prf_pic } };
+			if (li.profile_pic) prf_pic = li.profile_pic;
+			const obj = {
+				/* eslint-disable-next-line */
+				key: li._id,
+				text: li.fullname,
+				value: li.fullname,
+				image: { avatar: true, src: prf_pic }
+			};
 			res_list.push(obj);
 			return null;
 		});
@@ -103,7 +140,7 @@ class VisibilityForm extends Component {
 
 	handleChange = (e, { value }) => {
 		this.setState({
-			visibility: { ...this.state.visibility, vis_type: value } 
+			visibility: { ...this.state.visibility, vis_type: value }
 		});
 	};
 
@@ -113,9 +150,9 @@ class VisibilityForm extends Component {
 
 	resetToDefault = () => {
 		this.setState({
-			visibility: { vis_type: 'all', rej_list: [] } 
-		});	
-	}
+			visibility: { vis_type: "all", rej_list: [] }
+		});
+	};
 
 	render() {
 		const { vis_type, rej_list } = this.state.visibility;
@@ -124,13 +161,13 @@ class VisibilityForm extends Component {
 		return (
 			<Form loading={this.props.loading}>
 				<Message
-					header="Please Note:" 
-					content="If you want nobody should see, Check 'Select who can see' and don't select anyone from the list." 
+					header="Please Note:"
+					content="If you want nobody should see, Check 'Select who can see' and don't select anyone from the list."
 				/>
 				<Header as="h4">Who can see?</Header>
 				<Form.Group grouped>
 					<Form.Field
-						control={Radio} 
+						control={Radio}
 						label="All"
 						value="all"
 						checked={vis_type === "all"}
@@ -138,7 +175,7 @@ class VisibilityForm extends Component {
 					/>
 
 					<Form.Field
-						control={Radio} 
+						control={Radio}
 						label="Boys"
 						value="boys"
 						checked={vis_type === "boys"}
@@ -146,7 +183,7 @@ class VisibilityForm extends Component {
 					/>
 
 					<Form.Field
-						control={Radio} 
+						control={Radio}
 						label="Girls"
 						value="girls"
 						checked={vis_type === "girls"}
@@ -171,7 +208,7 @@ class VisibilityForm extends Component {
 							value={select_options}
 							onChange={this.handleListChange}
 							// options={[{ text: "Saka Sai Trinath", value: "Saka Sai Trinath", image: { avatar: true, src:  myImg} }]}
-							options = {select_options}
+							options={select_options}
 							placeholder="Select who can see"
 						/>
 					</Form.Group>
@@ -184,7 +221,7 @@ class VisibilityForm extends Component {
 							checked={vis_type === "select_except"}
 							onChange={this.handleChange}
 						/>
-						<Dropdown 
+						<Dropdown
 							fluid
 							multiple
 							disabled={vis_type !== "select_except"}
@@ -193,7 +230,7 @@ class VisibilityForm extends Component {
 							name="select_except_options"
 							value={select_except_options}
 							onChange={this.handleListChange}
-							options = {select_except_options}
+							options={select_except_options}
 							// options={[{ text: "Saka Sai Trinath", value: "Saka Sai Trinath", image: { avatar: true, src:  myImg} }]}
 							placeholder="All can see except"
 						/>
@@ -201,32 +238,30 @@ class VisibilityForm extends Component {
 				</Form.Group>
 				<Segment stacked>
 					<p>
-						<span style={{ fontWeight: 'bold' }}>Option:</span> 
-						{" "}
-						{vis_type === 'select' ? 
-								'Select who can see'
-							:
-								vis_type === 'select_except' ?
-									'All can see except'
-							:
-								vis_type
-						}
+						<span style={{ fontWeight: "bold" }}>Option:</span>{" "}
+						{vis_type === "select"
+							? "Select who can see"
+							: vis_type === "select_except"
+							? "All can see except"
+							: vis_type}
 					</p>
-					<span style={{ fontWeight: 'bold' }}>Rejected List (These cannot see):</span>
+					<span style={{ fontWeight: "bold" }}>
+						Rejected List (These cannot see):
+					</span>
 					<div>
-						{ vis_type === 'boys' ? 
-							"All girls" 
-						: vis_type === 'girls' ?
-							"All boys"
-						:  rej_list && rej_list.length > 0 ? rej_list.map(rj => (
-							<Label>{rj}</Label>							
-						)) : "None."}
+						{vis_type === "boys"
+							? "All girls"
+							: vis_type === "girls"
+							? "All boys"
+							: rej_list && rej_list.length > 0
+							? rej_list.map(rj => <Label>{rj}</Label>)
+							: "None."}
 					</div>
 					<Divider />
-					<Button 
-						size="small" 
-						icon="undo" 
-						content="Reset" 
+					<Button
+						size="small"
+						icon="undo"
+						content="Reset"
 						onClick={this.resetToDefault}
 					/>
 				</Segment>

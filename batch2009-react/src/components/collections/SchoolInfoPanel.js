@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Table, Button, Icon, Popup } from "semantic-ui-react";
 import { connect } from "react-redux";
 
@@ -8,21 +9,23 @@ import AddNewGames from "../modals/AddNewGames";
 import { fetchSchoolInfo, deleteGame } from "../../actions/schoolinfo";
 
 class SchoolInfoPanel extends React.Component {
-	state = { 
+	state = {
 		gameData: this.props.games || []
 	};
 
 	componentDidMount = () => {
-		this.props.fetchSchoolInfo();	
+		const { user_username } = this.props;
+		this.props.fetchSchoolInfo(user_username);
 	};
 
-	componentDidUpdate = (prevProps, prevState) => {
-		if(this.props.games !== prevProps.games) {
+	componentDidUpdate = prevProps => {
+		if (this.props.games !== prevProps.games) {
+			/* eslint-disable-next-line */
 			this.setState({
 				gameData: this.props.games
 			});
-		}	
-	}
+		}
+	};
 
 	deleteItem = id => {
 		this.props.deleteGame(id);
@@ -52,15 +55,19 @@ class SchoolInfoPanel extends React.Component {
 	};
 
 	render() {
-		const { studied_from_year, studied_to_year, junior_house, senior_house } = this.props;
+		const {
+			studied_from_year,
+			studied_to_year,
+			junior_house,
+			senior_house,
+			isCurrentUser
+		} = this.props;
 
 		return (
 			<div>
-				{
-					// This should appear if user is viewing his profile in My profile time only.
-					// If he come to this page from status cards, then this should not display
-					<EditSchoolInfo />
-				}
+				{// This should appear if user is viewing his profile in My profile time only.
+				// If he come to this page from status cards, then this should not display
+				isCurrentUser && <EditSchoolInfo />}
 				<Table celled striped>
 					<Table.Body>
 						<Table.Row>
@@ -79,9 +86,7 @@ class SchoolInfoPanel extends React.Component {
 				<Table>
 					<Table.Header>
 						<Table.Row>
-							<Table.HeaderCell colSpan="2">
-								House
-							</Table.HeaderCell>
+							<Table.HeaderCell colSpan="2">House</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
@@ -102,65 +107,55 @@ class SchoolInfoPanel extends React.Component {
 					</Table.Body>
 				</Table>
 
-				{
-					/* Games and Sports */
-					/* This should appear if user is viewing his profile in My profile time only.
+				{/* Games and Sports */
+				/* This should appear if user is viewing his profile in My profile time only.
 					If he come to this page from status cards, then this should not display */
-					<AddNewGames />
-				}
+				isCurrentUser && <AddNewGames />}
 				<Table celled>
 					<Table.Header>
 						<Table.Row>
-							<Table.HeaderCell colSpan="4">
-								Games and Sports
-							</Table.HeaderCell>
+							<Table.HeaderCell colSpan="4">Games and Sports</Table.HeaderCell>
 						</Table.Row>
 						<Table.Row>
 							<Table.HeaderCell>Game</Table.HeaderCell>
 							<Table.HeaderCell>Level reached</Table.HeaderCell>
-							<Table.HeaderCell colSpan="2">
-								Number of times
-							</Table.HeaderCell>
+							<Table.HeaderCell colSpan="2">Number of times</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						{
-							this.state.gameData.length > 0 ? 
-								this.state.gameData.map((game, i) => {
-									const name = game.game_name;
-									return (
-										<Table.Row key={game._id}>
-											<Table.Cell>
-												<Icon
-													name={this.GameIconFinder(name)}
-													color="teal"
-												/>
-												{game.game_name}
-											</Table.Cell>
-											<Table.Cell>{game.level_reached}</Table.Cell>
-											<Table.Cell>
-												{game.no_of_reached}
-											</Table.Cell>
-											<Table.Cell collapsing textAlign="right">
-												<Popup 
-													inverted
-													content='Delete cell' 
-													trigger={
-														<Button
-															size="mini"
-															icon="close"
-															onClick={() => this.deleteItem(game)}
-														/>
-													} />
-											</Table.Cell>
-										</Table.Row>
-									);
-								}) 
-							:
-								<Table.Row>
-									<Table.Cell>No records found...</Table.Cell>
-								</Table.Row>
-						}
+						{this.state.gameData.length > 0 ? (
+							this.state.gameData.map(game => {
+								const name = game.game_name;
+								return (
+									/* eslint-disable-next-line */
+									<Table.Row key={game._id}>
+										<Table.Cell>
+											<Icon name={this.GameIconFinder(name)} color="teal" />
+											{game.game_name}
+										</Table.Cell>
+										<Table.Cell>{game.level_reached}</Table.Cell>
+										<Table.Cell>{game.no_of_reached}</Table.Cell>
+										<Table.Cell collapsing textAlign="right">
+											<Popup
+												inverted
+												content="Delete cell"
+												trigger={
+													<Button
+														size="mini"
+														icon="close"
+														onClick={() => this.deleteItem(game)}
+													/>
+												}
+											/>
+										</Table.Cell>
+									</Table.Row>
+								);
+							})
+						) : (
+							<Table.Row>
+								<Table.Cell>No records found...</Table.Cell>
+							</Table.Row>
+						)}
 					</Table.Body>
 				</Table>
 			</div>
@@ -174,8 +169,32 @@ function mapStateToProps(state) {
 		studied_to_year: state.schoolinfo.studied_to_year,
 		junior_house: state.schoolinfo.junior_house,
 		senior_house: state.schoolinfo.senior_house,
-		games: state.schoolinfo.games
-	}
+		games: state.schoolinfo.games,
+		username: state.user.username
+	};
 }
 
-export default connect(mapStateToProps, { fetchSchoolInfo, deleteGame })(SchoolInfoPanel);
+SchoolInfoPanel.defaultProps = {
+	games: [],
+	studied_from_year: "",
+	studied_to_year: "",
+	junior_house: "",
+	senior_house: ""
+};
+
+SchoolInfoPanel.propTypes = {
+	isCurrentUser: PropTypes.bool.isRequired,
+	deleteGame: PropTypes.func.isRequired,
+	games: PropTypes.arrayOf(PropTypes.shape({})),
+	fetchSchoolInfo: PropTypes.func.isRequired,
+	studied_from_year: PropTypes.string,
+	studied_to_year: PropTypes.string,
+	junior_house: PropTypes.string.isRequired,
+	senior_house: PropTypes.string.isRequired,
+	user_username: PropTypes.string.isRequired
+};
+
+export default connect(
+	mapStateToProps,
+	{ fetchSchoolInfo, deleteGame }
+)(SchoolInfoPanel);

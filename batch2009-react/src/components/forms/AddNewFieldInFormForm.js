@@ -18,15 +18,15 @@ class AddNewFieldInFormForm extends Component {
 	};
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if(this.state.data !== prevState.data) {
+		if (this.state.data !== prevState.data) {
 			this.props.updateState(this.state.data);
-		};
+		}
 
 		if (this.props.errors !== prevProps.errors) {
 			this.setState({ errors: this.props.errors });
 		}
 
-		if(this.props.loading !== prevProps.loading) {
+		if (this.props.loading !== prevProps.loading) {
 			this.setState({ loading: this.props.loading });
 		}
 	};
@@ -44,27 +44,23 @@ class AddNewFieldInFormForm extends Component {
 		return (
 			<Form loading={loading}>
 				<Form.Group widths="equal">
-					<Form.Input 
-						label="Field Name" 
-						value={field} 
-						onChange={this.handleDataChange} 
+					<Form.Input
+						label="Field Name"
+						value={field}
+						onChange={this.handleDataChange}
 						name="field"
 						error={!!errors.field}
 					/>
-					{errors.field && (
-						<InlineError text={errors.field} />
-					)}
+					{errors.field && <InlineError text={errors.field} />}
 
-					<Form.Input 
-						label="Field Name" 
-						value={value} 
-						onChange={this.handleDataChange} 
+					<Form.Input
+						label="Field value"
+						value={value}
+						onChange={this.handleDataChange}
 						name="value"
 						error={!!errors.value}
 					/>
-					{errors.value && (
-						<InlineError text={errors.value} />
-					)}
+					{errors.value && <InlineError text={errors.value} />}
 				</Form.Group>
 			</Form>
 		);

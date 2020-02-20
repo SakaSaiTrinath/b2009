@@ -7019,9 +7019,9 @@ react@^16.4.1:
     scheduler "^0.13.6"
 
 read-more-react@^1.0.6:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/read-more-react/-/read-more-react-1.0.9.tgz#8c32e5e5b23033be7b0b7a59b6d26980dcae473f"
-  integrity sha512-HOvuyxCD7BNYm7ncIpHx2ca5Deo5KSTRb9kYId/UakvYmrIY4H4wbxyrxXnynSqDTvVeTmLJxM0QLSra+TcheQ==
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/read-more-react/-/read-more-react-1.0.10.tgz#d384d0d1403ab5705e309b44574af71810fded6f"
+  integrity sha512-8IRDU/tJX1hLbHjPxJHeUxAhm/wC8RHPSbAA+3mS7Dk13/PJf9ra7Z18apkqqPkENIoEaQI5NqhIMQIa1vOxfw==
 
 read-pkg-up@^1.0.1:
   version "1.0.1"

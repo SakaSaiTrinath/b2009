@@ -1,4 +1,4 @@
-import React, { Component } from "react"; 
+import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import { connect } from "react-redux";
@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import InlineError from "../messages/InlineError";
 
 const mapNumberToMonth = number => {
-	switch(number) {
+	switch (number) {
 		case 1:
 			return "January";
 		case 2:
@@ -63,26 +63,29 @@ class EditBasicInfoForm extends Component {
 	};
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if(this.state.data.date !== prevState.data.date) {
-			if(this.state.data.date) {
+		if (this.state.data.date !== prevState.data.date) {
+			if (this.state.data.date) {
 				let d = this.state.data.date;
 				d = d.split("-");
-				let month = mapNumberToMonth(parseInt(d[1], 10));
-				this.setState({ 
+				const month = mapNumberToMonth(parseInt(d[1], 10));
+				/* eslint-disable-next-line */
+				this.setState({
 					data: { ...this.state.data, birthmonth: month, birthdate: d[0] }
 				});
 			}
-		};
+		}
 
-		if(this.state.data !== prevState.data) {
+		if (this.state.data !== prevState.data) {
 			this.props.updateState(this.state.data);
-		};
+		}
 
 		if (this.props.errors !== prevProps.errors) {
+			/* eslint-disable-next-line */
 			this.setState({ errors: this.props.errors });
 		}
 
-		if(this.props.loading !== prevProps.loading) {
+		if (this.props.loading !== prevProps.loading) {
+			/* eslint-disable-next-line */
 			this.setState({ loading: this.props.loading });
 		}
 	};
@@ -94,25 +97,26 @@ class EditBasicInfoForm extends Component {
 	};
 
 	render() {
-		const { 
+		const {
 			nick_name,
 			date,
-			gender, 
-			phone_number, 
-			rel_status, 
-			home_address, 
+			gender,
+			phone_number,
+			rel_status,
+			home_address,
 			blood_group,
 			known_lang,
 			zodiac,
 			hobbies,
-			goal 
-		} = this.state.data; 
-		
+			goal
+		} = this.state.data;
+
 		const genderOptions = [
-			{ text: "Male", value: "Male", key: "Male" }, 
-			{ text: "Female", value: "Female", key: "Female" } 
+			{ text: "Male", value: "Male", key: "Male" },
+			{ text: "Female", value: "Female", key: "Female" }
 		];
 		const zodiacOptions = [
+			{ text: "---", value: "", key: "Not filled" },
 			{ text: "Aries", value: "Aries", key: "Aries" },
 			{ text: "Leo", value: "Leo", key: "Leo" },
 			{ text: "Sagittarius", value: "Sagittarius", key: "Sagittarius" },
@@ -127,10 +131,12 @@ class EditBasicInfoForm extends Component {
 			{ text: "Pisces", value: "Pisces", key: "Pisces" }
 		];
 		const relationsOptions = [
+			{ text: "---", value: "", key: "Not filled" },
 			{ text: "Single", value: "Single", key: "Single" },
 			{ text: "Married", value: "Married", key: "Married" }
 		];
 		const bloodtypeOptions = [
+			{ text: "---", value: "", key: "Not filled" },
 			{ text: "A+", value: "A+", key: "A+" },
 			{ text: "O+", value: "O+", key: "O+" },
 			{ text: "B+", value: "B+", key: "B+" },
@@ -143,19 +149,15 @@ class EditBasicInfoForm extends Component {
 		const { errors, loading } = this.state;
 
 		return (
-			<Form
-				loading={loading}
-			>
-				<Form.Input 
-					label="Nick Name" 
-					value={nick_name} 
-					onChange={this.handleDataChange} 
+			<Form loading={loading}>
+				<Form.Input
+					label="Nick Name"
+					value={nick_name}
+					onChange={this.handleDataChange}
 					name="nick_name"
 					error={!!errors.nick_name}
 				/>
-				{errors.nick_name && (
-					<InlineError text={errors.nick_name} />
-				)}
+				{errors.nick_name && <InlineError text={errors.nick_name} />}
 
 				<DateInput
 					label="Birth date"
@@ -167,11 +169,9 @@ class EditBasicInfoForm extends Component {
 					onChange={this.handleDataChange}
 					error={!!errors.date}
 				/>
-				{errors.date && (
-					<InlineError text={errors.date} />
-				)}
+				{errors.date && <InlineError text={errors.date} />}
 
-				<label color="green">{"Note: Only Month and Date are taken!"}</label>
+				<p style={{ color: "green" }}>Note: Only Month and Date are taken!</p>
 				<Form.Dropdown
 					label="Gender"
 					fluid
@@ -179,26 +179,23 @@ class EditBasicInfoForm extends Component {
 					search
 					selection
 					value={gender}
+					disabled
 					name="gender"
 					onChange={this.handleDataChange}
 					options={genderOptions}
 					error={!!errors.gender}
 				/>
-				{errors.gender && (
-					<InlineError text={errors.gender} />
-				)}
+				{errors.gender && <InlineError text={errors.gender} />}
 
-				<Form.Input 
-					label="Phone Number" 
-					type="number" 
-					value={phone_number} 
+				<Form.Input
+					label="Phone Number"
+					type="number"
+					value={phone_number}
 					name="phone_number"
-					onChange={this.handleDataChange} 
+					onChange={this.handleDataChange}
 					error={!!errors.phone_number}
 				/>
-				{errors.phone_number && (
-					<InlineError text={errors.phone_number} />
-				)}
+				{errors.phone_number && <InlineError text={errors.phone_number} />}
 
 				<Form.Dropdown
 					label="Relationship status"
@@ -212,20 +209,16 @@ class EditBasicInfoForm extends Component {
 					options={relationsOptions}
 					error={!!errors.rel_status}
 				/>
-				{errors.rel_status && (
-					<InlineError text={errors.rel_status} />
-				)}
+				{errors.rel_status && <InlineError text={errors.rel_status} />}
 
-				<Form.Input 
-					label="Home Address" 
-					value={home_address} 
+				<Form.Input
+					label="Home Address"
+					value={home_address}
 					name="home_address"
 					onChange={this.handleDataChange}
-					error={!!errors.home_address} 
+					error={!!errors.home_address}
 				/>
-				{errors.home_address && (
-					<InlineError text={errors.home_address} />
-				)}
+				{errors.home_address && <InlineError text={errors.home_address} />}
 
 				<Form.Dropdown
 					label="Blood Group"
@@ -237,22 +230,18 @@ class EditBasicInfoForm extends Component {
 					name="blood_group"
 					onChange={this.handleDataChange}
 					options={bloodtypeOptions}
-					error={!!errors.blood_group} 
+					error={!!errors.blood_group}
 				/>
-				{errors.blood_group && (
-					<InlineError text={errors.blood_group} />
-				)}
+				{errors.blood_group && <InlineError text={errors.blood_group} />}
 
-				<Form.Input 
-					label="Known Languages" 
-					value={known_lang} 
+				<Form.Input
+					label="Known Languages"
+					value={known_lang}
 					name="known_lang"
 					onChange={this.handleDataChange}
-					error={!!errors.known_lang}  
+					error={!!errors.known_lang}
 				/>
-				{errors.known_lang && (
-					<InlineError text={errors.known_lang} />
-				)}
+				{errors.known_lang && <InlineError text={errors.known_lang} />}
 
 				<Form.Dropdown
 					label="Zodiac"
@@ -266,32 +255,25 @@ class EditBasicInfoForm extends Component {
 					options={zodiacOptions}
 					error={!!errors.zodiac}
 				/>
-				{errors.zodiac && (
-					<InlineError text={errors.zodiac} />
-				)}
+				{errors.zodiac && <InlineError text={errors.zodiac} />}
 
-				<Form.Input 
-					label="Hobbies" 
-					value={hobbies} 
+				<Form.Input
+					label="Hobbies"
+					value={hobbies}
 					name="hobbies"
 					onChange={this.handleDataChange}
-					error={!!errors.hobbies} 
+					error={!!errors.hobbies}
 				/>
-				{errors.hobbies && (
-					<InlineError text={errors.hobbies} />
-				)}
+				{errors.hobbies && <InlineError text={errors.hobbies} />}
 
-				<Form.Input 
-					label="Goal" 
-					value={goal} 
+				<Form.Input
+					label="Goal"
+					value={goal}
 					name="goal"
 					onChange={this.handleDataChange}
-					error={!!errors.goal}  
+					error={!!errors.goal}
 				/>
-				{errors.goal && (
-					<InlineError text={errors.goal} />
-				)}
-
+				{errors.goal && <InlineError text={errors.goal} />}
 			</Form>
 		);
 	}
@@ -312,12 +294,27 @@ function mapStateToProps(state) {
 		zodiac: state.basicinfo.zodiac,
 		hobbies: state.basicinfo.hobbies,
 		goal: state.basicinfo.goal
-	}	
+	};
 }
 
+EditBasicInfoForm.defaultProps = {
+	nick_name: "",
+	birthmonth: "",
+	birthdate: "",
+	gender: "",
+	rel_status: "",
+	phone_number: null,
+	home_address: "",
+	blood_group: "",
+	known_lang: "",
+	zodiac: "",
+	hobbies: "",
+	goal: ""
+};
+
 EditBasicInfoForm.propTypes = {
-	updateState : PropTypes.func.isRequired,
-	errors : PropTypes.shape({
+	updateState: PropTypes.func.isRequired,
+	errors: PropTypes.shape({
 		nick_name: PropTypes.string,
 		gender: PropTypes.string,
 		rel_status: PropTypes.string,
@@ -328,7 +325,23 @@ EditBasicInfoForm.propTypes = {
 		zodiac: PropTypes.string,
 		hobbies: PropTypes.string,
 		goal: PropTypes.string
-	})
-}
+	}).isRequired,
+	nick_name: PropTypes.string,
+	birthmonth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	birthdate: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	gender: PropTypes.string,
+	rel_status: PropTypes.string,
+	phone_number: PropTypes.number,
+	home_address: PropTypes.string,
+	blood_group: PropTypes.string,
+	known_lang: PropTypes.string,
+	zodiac: PropTypes.string,
+	hobbies: PropTypes.string,
+	goal: PropTypes.string,
+	loading: PropTypes.bool.isRequired
+};
 
-export default connect(mapStateToProps, {})(EditBasicInfoForm);
+export default connect(
+	mapStateToProps,
+	{}
+)(EditBasicInfoForm);

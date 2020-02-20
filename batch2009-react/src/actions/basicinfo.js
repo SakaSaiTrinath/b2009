@@ -11,9 +11,9 @@ export const BasicInfoUpdated = basic_info => ({
 	basic_info
 });
 
-//=======================================================
-export const fetchBasicInfo = () => dispatch =>
-	api.user.fetchBasicInfo().then(basic_info => {
+// =======================================================
+export const fetchBasicInfo = username => dispatch =>
+	api.user.fetchBasicInfo(username).then(basic_info => {
 		dispatch(BasicInfoFetched(basic_info));
 	});
 

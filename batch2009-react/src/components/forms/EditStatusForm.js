@@ -1,11 +1,17 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import { fetchCountries, fetchStates, fetchCities, clearCities } from "../../actions/locations";
-import { 
-	allCountriesSelector, 
-	allStatesSelector, 
+import {
+	fetchCountries,
+	fetchStates,
+	fetchCities,
+	clearCities
+} from "../../actions/locations";
+import {
+	allCountriesSelector,
+	allStatesSelector,
 	allCitiesSelector
 } from "../../reducers/locations";
 
@@ -24,57 +30,81 @@ class EditStatusForm extends React.Component {
 	componentDidMount = () => {
 		this.props.updateState(this.state.data);
 		this.props.fetchCountries(this.props);
-		this.state.data.current_location.state && this.props.fetchStates(this.state.data.current_location.country);
-		this.state.data.current_location.city && this.props.fetchCities(this.state.data.current_location.country, this.state.data.current_location.state);
+		if (this.state.data.current_location.state) {
+			this.props.fetchStates(this.state.data.current_location.country);
+		}
+		if (this.state.data.current_location.city) {
+			this.props.fetchCities(
+				this.state.data.current_location.country,
+				this.state.data.current_location.state
+			);
+		}
 	};
 
-
 	componentDidUpdate = (prevProps, prevState) => {
-		if(this.state.data !== prevState.data) {
+		if (this.state.data !== prevState.data) {
 			this.props.updateState(this.state.data);
 		}
 
-		if(prevState.data.current_location.country !== this.state.data.current_location.country) {
+		if (
+			prevState.data.current_location.country !==
+			this.state.data.current_location.country
+		) {
 			this.props.fetchStates(this.state.data.current_location.country);
 			this.props.clearCities();
+			/* eslint-disable-next-line */
 			this.setState({
-				data: { ...this.state.data, 
-						current_location: { 
-							...this.state.data.current_location, state: "", city: ""
-						} 
+				data: {
+					...this.state.data,
+					current_location: {
+						...this.state.data.current_location,
+						state: "",
+						city: ""
 					}
+				}
 			});
 		}
 
-		if(prevState.data.current_location.state !== this.state.data.current_location.state) {
-			this.props.fetchCities(this.state.data.current_location.country, this.state.data.current_location.state);
+		if (
+			prevState.data.current_location.state !==
+			this.state.data.current_location.state
+		) {
+			this.props.fetchCities(
+				this.state.data.current_location.country,
+				this.state.data.current_location.state
+			);
 		}
 
 		if (this.props.errors !== prevProps.errors) {
+			/* eslint-disable-next-line */
 			this.setState({ errors: this.props.errors });
 		}
 
-		if(this.props.loading !== prevProps.loading) {
+		if (this.props.loading !== prevProps.loading) {
+			/* eslint-disable-next-line */
 			this.setState({ loading: this.props.loading });
 		}
 	};
 
-	handleStatusChange = (e, { name, value }) => {
+	handleStatusChange = (e, { value }) => {
 		this.setState({
-			data: {...this.state.data, status: value }
-		})
+			data: { ...this.state.data, status: value }
+		});
 	};
 
-	handleLocationChange = (e, { name, value }) => 
+	handleLocationChange = (e, { name, value }) =>
 		this.setState({
 			errors: {},
-			data: { ...this.state.data, current_location: { ...this.state.data.current_location, [name]: value } }
+			data: {
+				...this.state.data,
+				current_location: { ...this.state.data.current_location, [name]: value }
+			}
 		});
 
 	render() {
 		const { status } = this.state.data;
 		const { errors, loading } = this.state;
-		const { CountryOptions, StateOptions, CityOptions } = this.props;
+		const { CountryOptions, StateOptions, CityOptions } = this.props; // eslint-disable-line
 		const { country, state, city } = this.state.data.current_location;
 
 		return (
@@ -87,15 +117,13 @@ class EditStatusForm extends React.Component {
 					onChange={this.handleStatusChange}
 					error={!!errors.status}
 				/>
-				{errors.status && (
-					<InlineError text={errors.status} />
-				)}
+				{errors.status && <InlineError text={errors.status} />}
 				<Form.Group widths="equal">
-					<Form.Dropdown 
-						placeholder="Country" 
+					<Form.Dropdown
+						placeholder="Country"
 						fluid
 						search
-						selection 
+						selection
 						label="Country"
 						value={country}
 						onChange={this.handleLocationChange}
@@ -106,30 +134,30 @@ class EditStatusForm extends React.Component {
 					{errors.current_location_country && (
 						<InlineError text={errors.current_location_country} />
 					)}
-					<Form.Dropdown 
-						placeholder="State" 
-						fluid 
+					<Form.Dropdown
+						placeholder="State"
+						fluid
 						search
 						label="State"
 						onChange={this.handleLocationChange}
 						value={state}
 						name="state"
-						selection 
+						selection
 						options={StateOptions}
 						error={!!errors.current_location_state}
 					/>
 					{errors.current_location_state && (
 						<InlineError text={errors.current_location_state} />
 					)}
-					<Form.Dropdown 
-						placeholder="Location" 
+					<Form.Dropdown
+						placeholder="Location"
 						fluid
-						search 
+						search
 						label="City"
 						onChange={this.handleLocationChange}
 						value={city}
 						name="city"
-						selection 
+						selection
 						options={CityOptions}
 						error={!!errors.current_location_city}
 					/>
@@ -149,7 +177,26 @@ function mapStateToProps(state) {
 		CountryOptions: allCountriesSelector(state),
 		StateOptions: allStatesSelector(state),
 		CityOptions: allCitiesSelector(state)
-	}
+	};
 }
 
-export default connect(mapStateToProps, { fetchCountries, fetchStates, fetchCities, clearCities })(EditStatusForm);
+EditStatusForm.defaultProps = {
+	loading: false
+};
+
+EditStatusForm.propTypes = {
+	status: PropTypes.string.isRequired,
+	updateState: PropTypes.func.isRequired,
+	fetchCountries: PropTypes.func.isRequired,
+	fetchStates: PropTypes.func.isRequired,
+	fetchCities: PropTypes.func.isRequired,
+	clearCities: PropTypes.func.isRequired,
+	current_location: PropTypes.shape({}).isRequired,
+	errors: PropTypes.shape({}).isRequired,
+	loading: PropTypes.bool
+};
+
+export default connect(
+	mapStateToProps,
+	{ fetchCountries, fetchStates, fetchCities, clearCities }
+)(EditStatusForm);

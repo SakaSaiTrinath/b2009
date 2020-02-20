@@ -1,11 +1,8 @@
 import React from "react";
-import {
-	Form,
-	Segment,
-	Button
-} from "semantic-ui-react";
+import { Form, Segment, Button, Message } from "semantic-ui-react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import InlineError from "../messages/InlineError";
-import { connect } from 'react-redux';
 
 import { resetPassword } from "../../actions/auth";
 
@@ -28,35 +25,36 @@ class ResetPasswordForm extends React.Component {
 
 	onSubmit = e => {
 		e.preventDefault();
-		this.setState({ loading: true });
 		const errors = this.validate(this.state.data);
 		this.setState({
 			errors
 		});
-		if(Object.keys(errors).length === 0) {
+		if (Object.keys(errors).length === 0) {
+			this.setState({ loading: true });
 			this.setState({ loading: true });
 			const data = {
 				current_password: this.state.data.current_password,
 				new_password: this.state.data.new_password1
-			}
+			};
 
 			this.props
 				.resetPassword(data)
 				.then(() => {
-					this.setState({ 
-						data: { 
+					this.setState({
+						data: {
 							current_password: "",
 							new_password1: "",
 							new_password2: ""
 						},
 						loading: false
 					});
-					alert(`Password successfully changed.`);
+					alert(`Password successfully changed.`); // eslint-disable-line
 				})
 				.catch(err => {
-					console.log(err);
 					this.setState({
-						errors: err.response.data.errors,
+						errors: err.response.data.errors || {
+							global: `${JSON.stringify(err.response.data)}`
+						},
 						loading: false
 					});
 				});
@@ -68,7 +66,10 @@ class ResetPasswordForm extends React.Component {
 		if (!data.current_password) errors.current_password = "Can't be blank!";
 		if (!data.new_password1) errors.new_password1 = "Can't be blank!";
 		if (!data.new_password2) errors.new_password2 = "Can't be blank!";
-		if(data.new_password1 !== data.new_password2) errors.new_password2 = "Both Password should match!";
+		if (data.new_password1 !== data.new_password2)
+			errors.new_password2 = "Both Password should match!";
+		if (data.new_password1 === data.current_password)
+			errors.new_password1 = "New password should not match old password!";
 		return errors;
 	};
 
@@ -76,11 +77,18 @@ class ResetPasswordForm extends React.Component {
 		const { data, errors, loading } = this.state;
 
 		return (
-			<Form
-				onSubmit={this.onSubmit}
-				error={!!errors}
-				loading={loading}
-			>
+			<Form onSubmit={this.onSubmit} error={!!errors} loading={loading}>
+				{errors && errors.global && (
+					<Message
+						error
+						header="Something went wrong!!!"
+						list={[
+							"Please try again!",
+							"Or Report developer with below error through contact section.",
+							`Error: ${JSON.stringify(errors.global)}`
+						]}
+					/>
+				)}
 				<Segment stacked>
 					<Form.Input
 						fluid
@@ -110,9 +118,7 @@ class ResetPasswordForm extends React.Component {
 						value={data.new_password1}
 						error={!!errors.new_password1}
 					/>
-					{errors.new_password1 && (
-						<InlineError text={errors.new_password1} />
-					)}
+					{errors.new_password1 && <InlineError text={errors.new_password1} />}
 
 					<Form.Input
 						fluid
@@ -126,9 +132,7 @@ class ResetPasswordForm extends React.Component {
 						value={data.new_password2}
 						error={!!errors.new_password2}
 					/>
-					{errors.new_password2 && (
-						<InlineError text={errors.new_password2} />
-					)}
+					{errors.new_password2 && <InlineError text={errors.new_password2} />}
 					<Button color="teal" fluid size="large">
 						Reset
 					</Button>
@@ -138,4 +142,11 @@ class ResetPasswordForm extends React.Component {
 	}
 }
 
-export default connect(null, { resetPassword })(ResetPasswordForm);
+ResetPasswordForm.propTypes = {
+	resetPassword: PropTypes.func.isRequired
+};
+
+export default connect(
+	null,
+	{ resetPassword }
+)(ResetPasswordForm);

@@ -13,8 +13,8 @@ export const SchoolInfoUpdated = school_info => ({
 
 // -----------------------------------------------------------
 
-export const fetchSchoolInfo = () => dispatch =>
-	api.user.fetchSchoolInfo().then(school_info => {
+export const fetchSchoolInfo = username => dispatch =>
+	api.user.fetchSchoolInfo(username).then(school_info => {
 		dispatch(SchoolInfoFetched(school_info));
 	});
 

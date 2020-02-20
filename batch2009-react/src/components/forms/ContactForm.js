@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "semantic-ui-react";
+import { Form, Message } from "semantic-ui-react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -17,6 +17,7 @@ class ContactForm extends React.Component {
 		},
 		isFormSuccess: false,
 		errors: {},
+		error: "",
 		loading: false
 	};
 
@@ -27,7 +28,7 @@ class ContactForm extends React.Component {
 		) {
 			setTimeout(() => {
 				this.setIsFormSuccess();
-			}, 1000);
+			}, 5000);
 		}
 	}
 
@@ -39,6 +40,7 @@ class ContactForm extends React.Component {
 
 	onSubmit = e => {
 		e.preventDefault();
+		if (this.state.loading) return;
 		const errors = this.validate(this.state.data);
 		this.setState({
 			errors
@@ -52,12 +54,22 @@ class ContactForm extends React.Component {
 			username
 		};
 		if (Object.keys(errors).length === 0) {
-			this.props.sendUserResponse(sendObj).then(() => {
-				this.setState({
-					data: { title: "", type: "", message: "" },
-					isFormSuccess: true
+			this.setState({ loading: true, error: "" });
+			this.props
+				.sendUserResponse(sendObj)
+				.then(() => {
+					this.setState({ loading: false });
+					this.setState({
+						data: { title: "", type: "", message: "" },
+						isFormSuccess: true
+					});
+				})
+				.catch(err => {
+					this.setState({
+						loading: false,
+						error: JSON.stringify(err.response.data)
+					});
 				});
-			});
 			/* this.setState({
 				data: { title: "", type: "", message: "" },
 				isFormSuccess: true
@@ -78,11 +90,23 @@ class ContactForm extends React.Component {
 	};
 
 	render() {
-		const { data, errors, isFormSuccess } = this.state;
+		const { data, errors, isFormSuccess, error, loading } = this.state;
 
 		return (
 			<Form size="large" onSubmit={this.onSubmit} error={!!errors}>
 				{errors.title && <InlineError text={errors.title} />}
+				{error && (
+					<Message
+						error
+						header="Something went wrong!!!"
+						list={[
+							"Please try again!",
+							"Check your internet!",
+							"Or Report developer with below error through contact section.",
+							`Error: ${JSON.stringify(error)}`
+						]}
+					/>
+				)}
 				<Form.Input
 					fluid
 					icon="heading"
@@ -145,7 +169,7 @@ class ContactForm extends React.Component {
 					<FormSuccess text="You've successfully sent your response!" />
 				)}
 				<Form.Button color="teal" fluid size="large">
-					Send
+					{!loading ? "Send" : "sending..."}
 				</Form.Button>
 			</Form>
 		);

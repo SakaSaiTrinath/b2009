@@ -35,18 +35,14 @@ class LoginForm extends React.Component {
 		this.setState({
 			errors
 		});
-		if(Object.keys(errors).length === 0) {
-			// alert(`Username: ${this.state.data.username}, Password: ${this.state.data.password}`);
+		if (Object.keys(errors).length === 0) {
 			this.setState({ loading: true });
-			this.props
-				.submit(this.state.data)
-				.catch(err => {
-					console.log(err);
-					this.setState({
-						errors: err.response.data.errors,
-						loading: false
-					});
+			this.props.submit(this.state.data).catch(err => {
+				this.setState({
+					errors: err.response.data.errors || {},
+					loading: false
 				});
+			});
 		}
 	};
 
@@ -77,7 +73,7 @@ class LoginForm extends React.Component {
 							error={!!errors}
 							loading={loading}
 						>
-							{errors.global && (
+							{errors && errors.global && (
 								<Message negative>
 									<Message.Header>Something went wrong</Message.Header>
 									<p>{errors.global}</p>
@@ -95,9 +91,7 @@ class LoginForm extends React.Component {
 									value={data.username}
 									error={!!errors.username}
 								/>
-								{errors.username && (
-									<InlineError text={errors.username} />
-								)}
+								{errors.username && <InlineError text={errors.username} />}
 
 								<Form.Input
 									fluid
@@ -111,9 +105,7 @@ class LoginForm extends React.Component {
 									value={data.password}
 									error={!!errors.password}
 								/>
-								{errors.password && (
-									<InlineError text={errors.password} />
-								)}
+								{errors.password && <InlineError text={errors.password} />}
 								<Button color="teal" fluid size="large">
 									Login
 								</Button>
@@ -126,7 +118,7 @@ class LoginForm extends React.Component {
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								Sai Trinath Saka
+								Saka Sai Trinath
 							</a>
 						</Message>
 					</Grid.Column>
@@ -137,6 +129,6 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
-	submit : PropTypes.func.isRequired
-}
+	submit: PropTypes.func.isRequired
+};
 export default LoginForm;

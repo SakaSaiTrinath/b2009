@@ -145,7 +145,7 @@ class DashboardPage extends React.Component {
 									<Segment
 										style={{
 											marginTop: "10px",
-											minHeight: window.innerHeight
+											minHeight: "88vh"
 										}}
 									>
 										{this.returnSwitch(this.state.activeItem)}
@@ -168,7 +168,7 @@ class DashboardPage extends React.Component {
 										marginTop: "10px",
 										marginLeft: "-10px",
 										marginRight: "-10px",
-										marginBottom: "-10px"
+										minHeight: "92vh"
 									}}
 								>
 									{this.returnSwitch(this.state.activeItem)}

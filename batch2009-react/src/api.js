@@ -16,8 +16,10 @@ export default {
 			axios.put("/api/auth/resetPassword", { data }).then(res => res.data),
 
 		// Basic
-		fetchBasicInfo: () =>
-			axios.get("/api/users/fetchBasicInfo").then(res => res.data.basic_info),
+		fetchBasicInfo: username =>
+			axios
+				.get(`/api/users/fetchBasicInfo/${username}`)
+				.then(res => res.data.basic_info),
 		updateBasicInfo: data =>
 			axios
 				.post("/api/users/updateBasicInfo", { data })
@@ -32,8 +34,10 @@ export default {
 				.then(res => res.data.basic_info),
 
 		// School info
-		fetchSchoolInfo: () =>
-			axios.get("/api/users/fetchSchoolInfo").then(res => res.data.school_info),
+		fetchSchoolInfo: username =>
+			axios
+				.get(`/api/users/fetchSchoolInfo/${username}`)
+				.then(res => res.data.school_info),
 		updateSchoolInfo: data =>
 			axios
 				.post("/api/users/updateSchoolInfo", { data })
@@ -48,9 +52,9 @@ export default {
 				.then(res => res.data.school_info),
 
 		// After Navodaya info
-		fetchAfterNavodayaInfo: () =>
+		fetchAfterNavodayaInfo: username =>
 			axios
-				.get("/api/users/fetchAfterNavodayaInfo")
+				.get(`/api/users/fetchAfterNavodayaInfo/${username}`)
 				.then(res => res.data.after_navodaya),
 		addNewAN: data =>
 			axios
@@ -66,9 +70,9 @@ export default {
 				.then(res => res.data.after_navodaya),
 
 		// Social info
-		fetchSocialAccInfo: () =>
+		fetchSocialAccInfo: username =>
 			axios
-				.get("/api/users/fetchSocialAccInfo")
+				.get(`/api/users/fetchSocialAccInfo/${username}`)
 				.then(res => res.data.social_acc),
 		updateSocialAccInfo: data =>
 			axios
@@ -80,9 +84,9 @@ export default {
 				.then(res => res.data.social_acc),
 
 		// Favourites info
-		fetchFavouritesInfo: () =>
+		fetchFavouritesInfo: username =>
 			axios
-				.get("/api/users/fetchFavouritesInfo")
+				.get(`/api/users/fetchFavouritesInfo/${username}`)
 				.then(res => res.data.favourites),
 		updateFavouritesInfo: data =>
 			axios
@@ -102,9 +106,9 @@ export default {
 				.then(res => res.data.favourites),
 
 		// Firstthings info
-		fetchFirstThingsInfo: () =>
+		fetchFirstThingsInfo: username =>
 			axios
-				.get("/api/users/fetchFirstThingsInfo")
+				.get(`/api/users/fetchFirstThingsInfo/${username}`)
 				.then(res => res.data.firstthings),
 		updateFirstThingsInfo: data =>
 			axios
@@ -138,11 +142,15 @@ export default {
 			axios.post("/api/locations/countries").then(res => res.data.countries),
 		fetchStates: country =>
 			axios
-				.post(`/api/locations/states/"${country}`)
+				.post(`/api/locations/states/${country}`)
 				.then(res => res.data.states),
 		fetchCities: (country, state) =>
 			axios
 				.post(`/api/locations/cities/${country}/${state}`)
 				.then(res => res.data.cities)
+	},
+	anns: {
+		fetchAnnouncements: params =>
+			axios.get("/api/ann/", params).then(res => res.data)
 	}
 };

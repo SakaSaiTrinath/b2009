@@ -12,8 +12,8 @@ export const FirstThingsInfoUpdated = firstthings => ({
 });
 
 // =======================================================
-export const fetchFirstThingsInfo = () => dispatch =>
-	api.user.fetchFirstThingsInfo().then(firstthings => {
+export const fetchFirstThingsInfo = username => dispatch =>
+	api.user.fetchFirstThingsInfo(username).then(firstthings => {
 		dispatch(FirstThingsInfoFetched(firstthings));
 	});
 

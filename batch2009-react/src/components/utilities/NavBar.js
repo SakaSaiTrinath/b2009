@@ -10,7 +10,8 @@ class NavBar extends React.Component {
 	state = {};
 
 	render() {
-		const { activeItem, mode, logout } = this.props;
+		const { activeItem, mode } = this.props;
+		const { props } = this;
 
 		return (
 			<div>
@@ -20,43 +21,46 @@ class NavBar extends React.Component {
 							labelPosition="left"
 							content="Sidebar"
 							icon="bars"
-							onClick={this.props.handleButtonClick}
+							onClick={props.handleButtonClick}
 							color="teal"
 							size="tiny"
 						/>
 
 						{/* <NavBar /> */}
-						{activeItem === "announcements" ||
-						activeItem === "status" ||
-						activeItem === "feed" ||
-						activeItem === "contact" ||
-						activeItem === "settings" ||
-						activeItem === "myprofile" ||
-						activeItem === "sitegallery" ? (
+						{[
+							"announcements",
+							"status",
+							"feed",
+							"contact",
+							"settings",
+							"profile",
+							"sitegallery",
+							"bloodgroups"
+						].includes(activeItem) ? (
 							<Button.Group floated="right" size="tiny">
 								<Button
 									icon
 									labelPosition="right"
 									color="blue"
-									onClick={() => this.props.history.push("/dashboard")}
+									onClick={() => props.history.push("/dashboard")}
 								>
 									Dashboard
 									<Icon name="dashboard" />
 								</Button>
-								<Button 
-									icon 
-									labelPosition="right" 
+								<Button
+									icon
+									labelPosition="right"
 									color="grey"
 									onClick={() => this.props.history.push("/settings")}
 								>
 									Settings
 									<Icon name="setting" />
 								</Button>
-								<Button 
-									icon 
-									labelPosition="right" 
+								<Button
+									icon
+									labelPosition="right"
 									color="red"
-									onClick={() => logout()}
+									onClick={() => props.logout()}
 								>
 									logout
 									<Icon name="sign out alternate" />
@@ -64,24 +68,24 @@ class NavBar extends React.Component {
 							</Button.Group>
 						) : (
 							<Button.Group floated="right" size="tiny">
-								{/*<Button to="/settings" as={NavLink} icon labelPosition="right" color="grey">
+								{/* <Button to="/settings" as={NavLink} icon labelPosition="right" color="grey">
 									Settings
 									<Icon name="setting" />
-								</Button>*/}
-								<Button 
-									icon 
-									labelPosition="right" 
+								</Button> */}
+								<Button
+									icon
+									labelPosition="right"
 									color="grey"
-									onClick={() => this.props.history.push("/settings")}
+									onClick={() => props.history.push("/settings")}
 								>
 									Settings
 									<Icon name="setting" />
 								</Button>
-								<Button 
-									icon 
-									labelPosition="right" 
+								<Button
+									icon
+									labelPosition="right"
 									color="red"
-									onClick={() => logout()}
+									onClick={() => props.logout()}
 								>
 									logout
 									<Icon name="sign out alternate" />
@@ -94,36 +98,39 @@ class NavBar extends React.Component {
 					<div>
 						<Button
 							icon="bars"
-							onClick={this.props.handleButtonClick}
+							onClick={props.handleButtonClick}
 							color="teal"
 							size="tiny"
 						/>
 
-						{activeItem === "announcements" ||
-						activeItem === "status" ||
-						activeItem === "feed" ||
-						activeItem === "contact" ||
-						activeItem === "settings" ||
-						activeItem === "myprofile" ||
-						activeItem === "sitegallery" ? (
+						{[
+							"announcements",
+							"status",
+							"feed",
+							"contact",
+							"settings",
+							"profile",
+							"sitegallery",
+							"bloodgroups"
+						].includes(activeItem) ? (
 							<Button.Group floated="right">
 								<Button
 									icon="dashboard"
 									color="blue"
 									size="tiny"
-									onClick={() => this.props.history.push("/dashboard")}
+									onClick={() => props.history.push("/dashboard")}
 								/>
 								<Button
 									icon="setting"
 									color="grey"
 									size="tiny"
-									onClick={() => this.props.history.push("/settings")}
+									onClick={() => props.history.push("/settings")}
 								/>
 								<Button
 									icon="sign out alternate"
 									color="red"
 									size="tiny"
-									onClick={() => logout()}
+									onClick={() => props.logout()}
 								/>
 							</Button.Group>
 						) : (
@@ -132,13 +139,13 @@ class NavBar extends React.Component {
 									icon="setting"
 									color="grey"
 									size="tiny"
-									onClick={() => this.props.history.push("/settings")}
+									onClick={() => props.history.push("/settings")}
 								/>
 								<Button
 									icon="sign out alternate"
 									color="red"
 									size="tiny"
-									onClick={() => logout()}
+									onClick={() => props.logout()}
 								/>
 							</Button.Group>
 						)}
@@ -153,7 +160,15 @@ NavBar.propTypes = {
 	activeItem: PropTypes.string.isRequired,
 	handleButtonClick: PropTypes.func.isRequired,
 	mode: PropTypes.string.isRequired,
-	logout : PropTypes.func.isRequired
+	logout: PropTypes.func.isRequired,
+	history: PropTypes.shape({
+		push: PropTypes.func.isRequired
+	}).isRequired
 };
 
-export default withRouter(connect(null, { logout })(NavBar));
+export default withRouter(
+	connect(
+		null,
+		{ logout }
+	)(NavBar)
+);

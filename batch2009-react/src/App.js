@@ -45,7 +45,7 @@ const subroutes = [
 	{
 		id: "profile",
 		exact: true,
-		path: "/profile"
+		path: "/profile/:user_username"
 	},
 	{
 		id: "sitegallery",

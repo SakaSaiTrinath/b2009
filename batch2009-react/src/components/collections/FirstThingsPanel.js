@@ -1,69 +1,79 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Table, Icon, Container, List, Label } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import EditFirstThings from "../modals/EditFirstThings";
-import Visibility from "../modals/Visibility";
+// import Visibility from "../modals/Visibility";
 
-import { fetchFirstThingsInfo, deleteFTField, updateFTVisibilty } from "../../actions/firstthingsinfo";
+import {
+	fetchFirstThingsInfo,
+	deleteFTField
+	// updateFTVisibilty
+} from "../../actions/firstthingsinfo";
 
 class FirstThingsPanel extends React.Component {
 	state = {
 		firstthings: this.props.firstthings,
-		visibility: {
+		/* visibility: {
 			first_things_vis_type: this.props.first_things_vis_type,
 			first_things_rejected_list: this.props.first_things_rejected_list || []
-		},
+		}, */
 		loading: false,
 		modalOpen: false
 	};
 
 	componentDidMount = () => {
-		this.props.fetchFirstThingsInfo();
+		const { user_username } = this.props;
+		this.props.fetchFirstThingsInfo(user_username);
 	};
 
-	componentDidUpdate = (prevProps, prevState) => {
-		if(this.props.firstthings !== prevProps.firstthings) {
+	componentDidUpdate = prevProps => {
+		if (this.props.firstthings !== prevProps.firstthings) {
+			/* eslint-disable-next-line */
 			this.setState({ firstthings: this.props.firstthings });
 		}
 
-		if(this.props.first_things_vis_type !== prevProps.first_things_vis_type || 
-			this.props.first_things_rejected_list !== prevProps.first_things_rejected_list) {
+		/* if (
+			this.props.first_things_vis_type !== prevProps.first_things_vis_type ||
+			this.props.first_things_rejected_list !==
+				prevProps.first_things_rejected_list
+		) {
+			 eslint-disable-next-line 
 			this.setState({
 				visibility: {
 					first_things_rejected_list: this.props.first_things_rejected_list,
 					first_things_vis_type: this.props.first_things_vis_type
-				} 
+				}
 			});
-		}	
+		} */
 	};
 
-	updateState = visibility => {
+	/* onClickSetVisibility = e => {
+		e.preventDefault();
+		this.setState({ loading: true });
+		const { visibility } = this.state;
+		if (
+			visibility.first_things_vis_type === "all" ||
+			visibility.first_things_vis_type === "boys" ||
+			visibility.first_things_vis_type === "girls"
+		) {
+			visibility.first_things_rejected_list = [];
+		}
+		this.props.updateFTVisibilty(visibility).then(() => {
+			this.setState({ loading: false, modalOpen: false });
+		});
+	}; */
+
+	/* updateState = visibility => {
 		// console.log("called here!", visibility.vis_type);
-		this.setState({ 
-			visibility: { 
-				first_things_vis_type: visibility.vis_type, 
+		this.setState({
+			visibility: {
+				first_things_vis_type: visibility.vis_type,
 				first_things_rejected_list: visibility.rej_list
 			}
 		});
-	};
-
-	onClickSetVisibility = e => {
-		e.preventDefault();
-		this.setState({ loading: true });
-		let { visibility } = this.state;
-		if(visibility.first_things_vis_type === 'all' ||
-			visibility.first_things_vis_type === 'boys' ||
-			visibility.first_things_vis_type === 'girls') 
-		{
-			visibility.first_things_rejected_list = [];
-		}
-		this.props
-			.updateFTVisibilty(visibility)
-			.then(() => {
-				this.setState({ loading: false, modalOpen: false });
-			});
-	};
+	}; */
 
 	deleteField = data => {
 		this.props.deleteFTField(data);
@@ -74,18 +84,22 @@ class FirstThingsPanel extends React.Component {
 	openModal = () => this.setState({ modalOpen: true });
 
 	render() {
-		const { firstthings, modalOpen, loading } = this.state;
-		const { first_things_vis_type, first_things_rejected_list } = this.state.visibility;
+		const { firstthings /* , modalOpen, loading */ } = this.state;
+		/* const {
+			first_things_vis_type,
+			first_things_rejected_list
+		} = this.state.visibility; */
+		const { isCurrentUser } = this.props;
 
 		return (
 			<div>
-				{
-					// This should appear if user is viewing his profile in My profile time only.
-					// If he come to this page from status cards, then this should not display
+				{// This should appear if user is viewing his profile in My profile time only.
+				// If he come to this page from status cards, then this should not display
+				isCurrentUser && (
 					<Container fluid textAlign="right">
 						<List horizontal>
-							<List.Item>
-								<Visibility 
+							{/* <List.Item>
+								<Visibility
 									openModal={this.openModal}
 									closeModal={this.closeModal}
 									loading={loading}
@@ -95,11 +109,11 @@ class FirstThingsPanel extends React.Component {
 									rej_list={first_things_rejected_list}
 									onClickSetVisibility={this.onClickSetVisibility}
 								/>
-							</List.Item>
+							</List.Item> */}
 							<List.Item>
 								<Label
 									as="a"
-									href="http://www.tagquestionss.com/my-first-time-tag-questions/"
+									href="http://www.tagquestionss.com/first-time-tag-questions/"
 									target="_blank"
 									rel="noreferrer noopener"
 								>
@@ -111,30 +125,33 @@ class FirstThingsPanel extends React.Component {
 							</List.Item>
 						</List>
 					</Container>
-				}
+				)}
 				<Table celled striped>
 					<Table.Body>
-						{firstthings && firstthings.length > 0 ?
+						{firstthings && firstthings.length > 0 ? (
 							firstthings.map(ft => (
+								/* eslint-disable-next-line */
 								<Table.Row key={ft._id}>
 									<Table.Cell>
 										<Icon name="first order" color="teal" />
 										{ft.field}
 									</Table.Cell>
 									<Table.Cell>{ft.value}</Table.Cell>
-									<Table.Cell onClick={() => this.deleteField(ft)}>
-										<Icon link name="delete" />
-							        </Table.Cell>
+									{isCurrentUser && (
+										<Table.Cell onClick={() => this.deleteField(ft)}>
+											<Icon link name="delete" />
+										</Table.Cell>
+									)}
 								</Table.Row>
-							)) : (
-								<Table.Row>
-									<Table.Cell>
-										<Icon name="first order" color="teal" />
-										{"No FirstThings."}
-									</Table.Cell>
-								</Table.Row>
-							)
-						}
+							))
+						) : (
+							<Table.Row>
+								<Table.Cell>
+									<Icon name="first order" color="teal" />
+									{"No FirstThings."}
+								</Table.Cell>
+							</Table.Row>
+						)}
 						{/*
 						<Table.Row>
 							<Table.Cell>
@@ -207,7 +224,7 @@ class FirstThingsPanel extends React.Component {
 								First time you went shopping on your own?
 							</Table.Cell>
 							<Table.Cell>In Btech 1st year</Table.Cell>
-						</Table.Row>*/}
+						</Table.Row> */}
 					</Table.Body>
 				</Table>
 			</div>
@@ -217,17 +234,34 @@ class FirstThingsPanel extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		firstthings: state.firstthingsinfo.firstthings,
-		first_things_vis_type: state.firstthingsinfo.first_things_vis_type,
-		first_things_rejected_list: state.firstthingsinfo.first_things_rejected_list
-	}
+		firstthings: state.firstthingsinfo.firstthings
+		// first_things_vis_type: state.firstthingsinfo.first_things_vis_type,
+		// first_things_rejected_list: state.firstthingsinfo.first_things_rejected_list
+	};
 }
 
+FirstThingsPanel.defaultProps = {
+	firstthings: []
+	// first_things_vis_type: "",
+	// first_things_rejected_list: []
+};
+
+FirstThingsPanel.propTypes = {
+	isCurrentUser: PropTypes.bool.isRequired,
+	firstthings: PropTypes.arrayOf(PropTypes.shape({})),
+	// first_things_rejected_list: PropTypes.arrayOf(PropTypes.string),
+	// first_things_vis_type: PropTypes.string.isRequired,
+	fetchFirstThingsInfo: PropTypes.func.isRequired,
+	// updateFTVisibilty: PropTypes.func.isRequired,
+	deleteFTField: PropTypes.func.isRequired,
+	user_username: PropTypes.string.isRequired
+};
+
 export default connect(
-	mapStateToProps, 
-	{ 
-		fetchFirstThingsInfo, 
-		deleteFTField,
-		updateFTVisibilty 
+	mapStateToProps,
+	{
+		fetchFirstThingsInfo,
+		deleteFTField
+		// updateFTVisibilty
 	}
 )(FirstThingsPanel);

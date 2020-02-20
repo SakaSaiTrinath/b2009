@@ -1,5 +1,14 @@
 import React from "react";
-import { Header, Grid, Card, Image, Button } from "semantic-ui-react";
+import {
+	Header,
+	Grid,
+	Card,
+	CardGroup,
+	Image,
+	Button,
+	Loader,
+	Message
+} from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -15,11 +24,27 @@ class StatusPage extends React.Component {
 		page: "usersJoined",
 		results: [],
 		usersJoined: [],
-		usersYetToJoin: []
+		usersYetToJoin: [],
+		loading: false,
+		error: ""
 	};
 
 	componentDidMount() {
-		this.props.fetchAllUsersFull();
+		/* eslint-disable */
+		this.setState({ loading: true, error: false });
+		this.props
+			.fetchAllUsersFull()
+			.then(() => {
+				this.setState({ loading: false });
+			})
+			.catch(err => {
+				this.setState({
+					loading: false,
+					error:
+						err.response.data.errors || err.response.data || JSON.stringify(err)
+				});
+			});
+		/* eslint-enable */
 	}
 
 	componentDidUpdate(prevProps) {
@@ -48,7 +73,14 @@ class StatusPage extends React.Component {
 	};
 
 	render() {
-		const { page, usersJoined, usersYetToJoin, results } = this.state;
+		const {
+			page,
+			usersJoined,
+			usersYetToJoin,
+			results,
+			loading,
+			error
+		} = this.state;
 
 		let source = [];
 		if (page === "usersJoined") {
@@ -97,26 +129,28 @@ class StatusPage extends React.Component {
 					</Grid.Column>
 				</Grid.Row>
 
-				<Grid.Row>
-					<Grid.Column>
-						<Button.Group color="teal" fluid>
-							<Button
-								name="usersJoined"
-								active={page === "usersJoined"}
-								onClick={this.handlePage}
-							>
-								Joined ({usersJoined.length})
-							</Button>
-							<Button
-								name="usersYetToJoin"
-								active={page === "usersYetToJoin"}
-								onClick={this.handlePage}
-							>
-								Yet To Join ({usersYetToJoin.length})
-							</Button>
-						</Button.Group>
-					</Grid.Column>
-				</Grid.Row>
+				{!error && (
+					<Grid.Row>
+						<Grid.Column>
+							<Button.Group color="teal" fluid>
+								<Button
+									name="usersJoined"
+									active={page === "usersJoined"}
+									onClick={this.handlePage}
+								>
+									Joined ({usersJoined.length})
+								</Button>
+								<Button
+									name="usersYetToJoin"
+									active={page === "usersYetToJoin"}
+									onClick={this.handlePage}
+								>
+									Yet To Join ({usersYetToJoin.length})
+								</Button>
+							</Button.Group>
+						</Grid.Column>
+					</Grid.Row>
+				)}
 
 				<Grid.Row
 					textAlign="center"
@@ -126,38 +160,56 @@ class StatusPage extends React.Component {
 				>
 					<Grid.Column>
 						<Grid stackable centered textAlign="center">
-							<Grid.Row align="middle">
-								{users && users.length > 0
-									? users.map(user => (
-											// eslint-disable-next-line
-											<Grid.Column width={4} key={user._id}>
-												<Card
-													color="teal"
-													style={{
-														marginTop: "10px",
-														marginBottom: "10px"
-													}}
-													as={Link}
-													to="/profile#"
-												>
-													<Card.Content>
-														<Image
-															src={user.profile_pic || dImg}
-															floated="right"
-															size="mini"
-														/>
-														<Card.Header>{user.fullname}</Card.Header>
-														<Card.Meta>
-															<span className="date">
-																{user.studied_from_year} {" - "}{" "}
-																{user.studied_to_year}
-															</span>
-														</Card.Meta>
-														<Card.Description>
-															{user.current_status}
-														</Card.Description>
-													</Card.Content>
-													{/* <Card.Content extra>
+							<Grid.Row>
+								<Grid.Column>
+									{error && (
+										<Message
+											error
+											header="Something went wrong!!!"
+											list={[
+												"Please try again!",
+												"Check your internet!",
+												"Or Report developer with below error through contact section.",
+												`Error: ${JSON.stringify(error)}`
+											]}
+										/>
+									)}
+									{loading && (
+										<Loader active inline="centered">
+											Loading
+										</Loader>
+									)}
+									<CardGroup itemsPerRow="4" stackable>
+										{!loading && users && users.length > 0
+											? users.map(user => (
+													<Card
+														color="teal"
+														style={{
+															marginTop: "10px",
+															marginBottom: "10px"
+														}}
+														as={Link}
+														key={user._id} // eslint-disable-line
+														to={`/profile/${user.username}`}
+													>
+														<Card.Content>
+															<Image
+																src={user.profile_pic || dImg}
+																floated="right"
+																size="mini"
+															/>
+															<Card.Header>{user.fullname}</Card.Header>
+															<Card.Meta>
+																<span className="date">
+																	{user.studied_from_year} {" - "}{" "}
+																	{user.studied_to_year}
+																</span>
+															</Card.Meta>
+															<Card.Description>
+																{user.current_status}
+															</Card.Description>
+														</Card.Content>
+														{/* <Card.Content extra>
 														<div className="ui two buttons">
 															<Button basic color="teal">
 																<Icon name="newspaper" />
@@ -172,10 +224,11 @@ class StatusPage extends React.Component {
 															</Button>
 														</div>
 													</Card.Content> */}
-												</Card>
-											</Grid.Column>
-									  ))
-									: "No users!"}
+													</Card>
+											  ))
+											: !loading && !error && "No users!"}
+									</CardGroup>
+								</Grid.Column>
 							</Grid.Row>
 						</Grid>
 					</Grid.Column>

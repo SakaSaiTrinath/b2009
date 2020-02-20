@@ -11,9 +11,9 @@ export const FavouritesInfoUpdated = favourites => ({
 	favourites
 });
 
-//============================================================
-export const fetchFavouritesInfo = () => dispatch =>
-	api.user.fetchFavouritesInfo().then(favourites => {
+// ============================================================
+export const fetchFavouritesInfo = username => dispatch =>
+	api.user.fetchFavouritesInfo(username).then(favourites => {
 		dispatch(FavouritesInfoFetched(favourites));
 	});
 

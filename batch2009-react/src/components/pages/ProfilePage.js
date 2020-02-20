@@ -1,6 +1,15 @@
 import React from "react";
 import { withRouter, Switch, BrowserRouter as Router } from "react-router-dom";
-import { Header, Segment, Image, Grid, Icon, Button } from "semantic-ui-react";
+import {
+	Header,
+	Segment,
+	Image,
+	Grid,
+	Icon,
+	Button,
+	Loader,
+	Message
+} from "semantic-ui-react";
 import { connect } from "react-redux";
 import Compress from "compress.js";
 import PropTypes from "prop-types";
@@ -15,11 +24,36 @@ import { fetchBasicInfo, uploadProfilePic } from "../../actions/basicinfo";
 class ProfilePage extends React.Component {
 	state = {
 		loading: false,
-		imageHash: Date.now()
+		imageHash: Date.now(),
+		error: false
 	};
 
 	componentDidMount = () => {
-		this.props.fetchBasicInfo();
+		const { user_username } = this.props.match.params;
+		/* eslint-disable */
+		this.setState({ loading: true });
+		this.props
+			.fetchBasicInfo(user_username)
+			.then(() => {
+				this.setState({ loading: false });
+			})
+			.catch(err => {
+				this.setState({
+					loading: false,
+					error:
+						err.response.data.errors || err.response.data || JSON.stringify(err)
+				});
+				if (
+					err.response &&
+					err.response.data &&
+					err.response.data.errors &&
+					err.response.data.errors.global &&
+					err.response.data.errors.global === "User doesn't exist!"
+				) {
+					this.props.history.push("/404-page");
+				}
+			});
+		/* eslint-enable */
 	};
 
 	onFileChange = e => {
@@ -49,9 +83,9 @@ class ProfilePage extends React.Component {
 							modFiles[i].data,
 							modFiles[i].ext
 						);
-						const filename = `${this.props.fullname} 
-							"-profile-pic." 
-							${modFiles[i].ext.split("/")[1]}`;
+						const filename = `${this.props.fullname}-profile-pic.${
+							modFiles[i].ext.split("/")[1]
+						}`;
 						const filetype = modFiles[i].ext;
 						const filelastMod = files[i].lastModified;
 						uploadableFiles.push(
@@ -94,16 +128,47 @@ class ProfilePage extends React.Component {
 			fullname,
 			current_status,
 			profile_pic,
-			current_location
+			current_location,
+			current_username
 		} = this.props;
-		const { loading, imageHash } = this.state;
+		const { loading, imageHash, error } = this.state;
+		const { user_username } = this.props.match.params;
+
+		if (loading) {
+			return (
+				<div
+					style={{
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						height: "100vh"
+					}}
+				>
+					<Loader active inline="centered">
+						Loading
+					</Loader>
+				</div>
+			);
+		}
+
+		if (error) {
+			return (
+				<Message
+					error
+					header="Something went wrong!!!"
+					list={[
+						"Please try again!",
+						"Check your internet!",
+						"Or Report developer with below error through contact section.",
+						`Error: ${JSON.stringify(error)}`
+					]}
+				/>
+			);
+		}
 
 		return (
 			<Router>
 				<Grid centered textAlign="center" stackable verticalAlign="middle">
-					<Grid.Row centered>
-						<Header as="h1" content="My Profile" color="teal" />
-					</Grid.Row>
 					<Grid.Row centered>
 						<Grid.Column width={3}>
 							<Segment textAlign="center" stacked raised loading={loading}>
@@ -117,9 +182,9 @@ class ProfilePage extends React.Component {
 								) : (
 									<Image src={profileDummyPic} size="medium" centered />
 								)}
-								{
-									// This should appear if user is viewing his profile in My profile time only.
-									// If he come to this page from status cards, then this should not display
+								{// This should appear if user is viewing his profile in My profile time only.
+								// If he come to this page from status cards, then this should not display
+								current_username === user_username && (
 									<div style={{ marginTop: "5px" }}>
 										<Button as="label" htmlFor="file" color="teal">
 											<Icon name="upload" />
@@ -132,7 +197,7 @@ class ProfilePage extends React.Component {
 											onChange={this.onFileChange}
 										/>
 									</div>
-								}
+								)}
 							</Segment>
 						</Grid.Column>
 
@@ -154,19 +219,19 @@ class ProfilePage extends React.Component {
 										Current Location
 									</Segment>
 									<Segment>
-										{current_location && current_location.city}
-										{", "}
-										{current_location && current_location.state}
-										{", "}
+										{current_location &&
+											current_location.city &&
+											`${current_location.city}  , `}
+										{current_location &&
+											current_location.state &&
+											`${current_location.state} ,`}
 										{current_location && current_location.country}
 									</Segment>
 								</Segment.Group>
 
-								{
-									// This should appear if user is viewing his profile in My profile time only.
-									// If he come to this page from status cards, then this should not display
-									<EditStatus />
-								}
+								{// This should appear if user is viewing his profile in My profile time only.
+								// If he come to this page from status cards, then this should not display
+								current_username === user_username && <EditStatus />}
 							</Segment.Group>
 							{/* <Segment.Group horizontal>
 								<Segment as="h5" color="teal">
@@ -200,7 +265,10 @@ class ProfilePage extends React.Component {
 					<Grid.Row>
 						<Grid.Column>
 							<Switch>
-								<InfoPanels />
+								<InfoPanels
+									isCurrentUser={current_username === user_username}
+									user_username={user_username}
+								/>
 							</Switch>
 						</Grid.Column>
 					</Grid.Row>
@@ -215,14 +283,15 @@ function mapStateToProps(state) {
 		fullname: state.basicinfo.fullname,
 		profile_pic: state.basicinfo.profile_pic,
 		current_status: state.basicinfo.current_status,
-		current_location: state.basicinfo.current_location
+		current_location: state.basicinfo.current_location,
+		current_username: state.user.username
 	};
 }
 
 ProfilePage.defaultProps = {
-	fullname: "---",
+	fullname: "",
 	profile_pic: "",
-	current_status: "---",
+	current_status: "",
 	current_location: {}
 };
 
@@ -236,7 +305,13 @@ ProfilePage.propTypes = {
 		city: PropTypes.string,
 		country: PropTypes.string,
 		state: PropTypes.string
-	})
+	}),
+	match: PropTypes.shape({
+		params: PropTypes.shape({
+			user_username: PropTypes.string.isRequired
+		}).isRequired
+	}).isRequired,
+	current_username: PropTypes.string.isRequired
 };
 
 export default withRouter(

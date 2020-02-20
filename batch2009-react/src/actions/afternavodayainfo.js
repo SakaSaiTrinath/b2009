@@ -1,4 +1,4 @@
-import { 
+import {
 	FETCH_AFTER_NAVODAYA_INFO,
 	UPDATE_AFTER_NAVODAYA_INFO
 } from "../types";
@@ -14,9 +14,9 @@ export const AterNavodayaInfoUpdated = after_navodaya_info => ({
 	after_navodaya_info
 });
 
-//======================================================================
-export const fetchAfterNavodayaInfo = () => dispatch =>
-	api.user.fetchAfterNavodayaInfo().then(after_navodaya_info => {
+// ======================================================================
+export const fetchAfterNavodayaInfo = username => dispatch =>
+	api.user.fetchAfterNavodayaInfo(username).then(after_navodaya_info => {
 		dispatch(AterNavodayaInfoFetched(after_navodaya_info));
 	});
 

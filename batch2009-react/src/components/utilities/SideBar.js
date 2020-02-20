@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { Sidebar, Menu, Header, Segment, Icon, Image } from "semantic-ui-react";
 import logoImage from "../images/icon.png";
 
@@ -30,7 +31,7 @@ class SideBar extends React.Component {
 	state = {};
 
 	render() {
-		const { visible, activeItem } = this.props;
+		const { visible, activeItem, current_username } = this.props;
 		return (
 			<Sidebar
 				as={Menu}
@@ -101,7 +102,7 @@ class SideBar extends React.Component {
 					<Menu.Item
 						name="profile"
 						as={NavLink}
-						to="/profile"
+						to={`/profile/${current_username}`}
 						active={activeItem === "profile"}
 						onClick={this.props.handleItemClick}
 					>
@@ -129,7 +130,14 @@ SideBar.propTypes = {
 	activeItem: PropTypes.string.isRequired,
 	visible: PropTypes.bool.isRequired,
 	handleSideBarHide: PropTypes.func.isRequired,
-	handleItemClick: PropTypes.func.isRequired
+	handleItemClick: PropTypes.func.isRequired,
+	current_username: PropTypes.string.isRequired
 };
 
-export default withRouter(SideBar);
+function mapStateToProps(state) {
+	return {
+		current_username: state.user.username
+	};
+}
+
+export default withRouter(connect(mapStateToProps)(SideBar));

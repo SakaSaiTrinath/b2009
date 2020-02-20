@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Table, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
 
@@ -23,14 +24,13 @@ class BasicInfoPanel extends React.Component {
 			hobbies,
 			goal
 		} = this.props;
+		const { isCurrentUser } = this.props;
 
 		return (
 			<div>
-				{
-					// This should appear if user is viewing his profile in My profile time only.
-					// If he come to this page from status cards, then this should not display
-					<EditBasicInfo />
-				}
+				{// This should appear if user is viewing his profile in My profile time only.
+				// If he come to this page from status cards, then this should not display
+				isCurrentUser && <EditBasicInfo />}
 				<Table celled striped>
 					<Table.Body>
 						<Table.Row>
@@ -52,7 +52,9 @@ class BasicInfoPanel extends React.Component {
 								<Icon name="birthday" color="teal" />
 								Candles Day
 							</Table.Cell>
-							<Table.Cell>{birthmonth}{" "}{birthdate}</Table.Cell>
+							<Table.Cell>
+								{birthmonth} {birthdate}
+							</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>
@@ -79,9 +81,7 @@ class BasicInfoPanel extends React.Component {
 								<Icon name="home" color="teal" />
 								Reside at
 							</Table.Cell>
-							<Table.Cell>
-								{home_address}
-							</Table.Cell>
+							<Table.Cell>{home_address}</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>
@@ -108,18 +108,14 @@ class BasicInfoPanel extends React.Component {
 								<Icon name="book" color="teal" />
 								Hobbies
 							</Table.Cell>
-							<Table.Cell>
-								{hobbies}
-							</Table.Cell>
+							<Table.Cell>{hobbies}</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>
 								<Icon name="grab" color="teal" />
 								Goal
 							</Table.Cell>
-							<Table.Cell>
-								{goal}
-							</Table.Cell>
+							<Table.Cell>{goal}</Table.Cell>
 						</Table.Row>
 					</Table.Body>
 				</Table>
@@ -143,7 +139,43 @@ function mapStateToProps(state) {
 		zodiac: state.basicinfo.zodiac,
 		hobbies: state.basicinfo.hobbies,
 		goal: state.basicinfo.goal
-	}
+	};
 }
 
-export default connect(mapStateToProps, {})(BasicInfoPanel);
+BasicInfoPanel.defaultProps = {
+	fullname: "",
+	nick_name: "",
+	birthmonth: "",
+	birthdate: "",
+	gender: "",
+	rel_status: "",
+	phone_number: null,
+	home_address: "",
+	blood_group: "",
+	known_lang: "",
+	zodiac: "",
+	hobbies: "",
+	goal: ""
+};
+
+BasicInfoPanel.propTypes = {
+	isCurrentUser: PropTypes.bool.isRequired,
+	fullname: PropTypes.string,
+	nick_name: PropTypes.string,
+	birthmonth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	birthdate: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	gender: PropTypes.string,
+	rel_status: PropTypes.string,
+	phone_number: PropTypes.number,
+	home_address: PropTypes.string,
+	blood_group: PropTypes.string,
+	known_lang: PropTypes.string,
+	zodiac: PropTypes.string,
+	hobbies: PropTypes.string,
+	goal: PropTypes.string
+};
+
+export default connect(
+	mapStateToProps,
+	{}
+)(BasicInfoPanel);

@@ -16,52 +16,53 @@ class EditFavouritesForm extends Component {
 	};
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if(this.props.favourites !== prevProps.favourites) {
+		if (this.props.favourites !== prevProps.favourites) {
 			this.setState({
 				favList: this.props.favourites
 			});
 		}
 
-		if(this.state.favList !== prevState.favList) {
+		if (this.state.favList !== prevState.favList) {
 			this.props.updateState(this.state.favList);
-		};
+		}
 
 		if (this.props.errors !== prevProps.errors) {
 			this.setState({ errors: this.props.errors });
 		}
 
-		if(this.props.loading !== prevProps.loading) {
+		if (this.props.loading !== prevProps.loading) {
 			this.setState({ loading: this.props.loading });
 		}
 	};
 
 	handleDataChange = (e, { name, value }) => {
 		let favList = this.state.favList.slice();
-        for(let i in favList){
-            if(favList[i].field === e.target.name){
-                favList[i].value = e.target.value;
-                this.setState ({favList});
-                break;
-            }
-        }
+		for (let i in favList) {
+			if (favList[i].field === e.target.name) {
+				favList[i].value = e.target.value;
+				this.setState({ favList });
+				break;
+			}
+		}
 	};
 
 	render() {
 		const { errors, loading, favList } = this.state;
 		return (
 			<Form loading={loading}>
-				{favList && favList.map(favItem => (
-					<Form.Input 
-						key={favItem._id}
-						name={favItem.field}
-						onChange={this.handleDataChange} 
-						label={`Fav. ${favItem.field}`} 
-						value={favItem.value}
-						error={!!errors[`${favItem.field}`]} 
-					/>
-				))}
+				{favList &&
+					favList.map(favItem => (
+						<Form.Input
+							key={favItem._id} // eslint-disable-line
+							name={favItem.field}
+							onChange={this.handleDataChange}
+							label={`Fav. ${favItem.field}`}
+							value={favItem.value}
+							error={!!errors[`${favItem.field}`]}
+						/>
+					))}
 				<AddNewFieldInForm tab="favourites" />
-			</Form> 
+			</Form>
 		);
 	}
 }
@@ -69,7 +70,10 @@ class EditFavouritesForm extends Component {
 function mapStateToProps(state) {
 	return {
 		favourites: state.favouritesinfo.favourites
-	}
+	};
 }
 
-export default connect(mapStateToProps, {})(EditFavouritesForm);
+export default connect(
+	mapStateToProps,
+	{}
+)(EditFavouritesForm);

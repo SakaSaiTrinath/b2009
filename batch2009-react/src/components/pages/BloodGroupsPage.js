@@ -5,8 +5,9 @@ import {
   Dropdown,
   // Button,
   Card,
-  Image
-  // Icon
+  Image,
+  Loader,
+  Message
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -19,13 +20,28 @@ import dImg from "../images/profile-dummy.jpg";
 class BloodGroupsPage extends React.Component {
   state = {
     bloodtype: "O+",
-    users: []
+    users: [],
+    loading: true,
+    error: ""
   };
 
   componentDidMount() {
-    this.props.fetchAllUsersFull().then(() => {
-      this.setUsers();
-    });
+    /* eslint-disable */
+    this.setState({ loading: true, error: false });
+    this.props
+      .fetchAllUsersFull()
+      .then(() => {
+        this.setUsers();
+        this.setState({ loading: false });
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          error:
+            err.response.data.errors || err.response.data || JSON.stringify(err)
+        });
+      });
+    /* eslint-enable */
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -51,7 +67,7 @@ class BloodGroupsPage extends React.Component {
   };
 
   render() {
-    const { bloodtype, users } = this.state;
+    const { bloodtype, users, loading, error } = this.state;
 
     const bloodtypeOptions = [
       { text: "A+", value: "A+", key: "A+" },
@@ -92,7 +108,24 @@ class BloodGroupsPage extends React.Component {
           <Grid.Column>
             <Grid stackable centered textAlign="center">
               <Grid.Row align="middle">
-                {users && users.length > 0
+                {error && (
+                  <Message
+                    error
+                    header="Something went wrong!!!"
+                    list={[
+                      "Please try again!",
+                      "Check your internet!",
+                      "Or Report developer with below error through contact section.",
+                      `Error: ${JSON.stringify(error)}`
+                    ]}
+                  />
+                )}
+                {loading && (
+                  <Loader active inline="centered">
+                    Loading
+                  </Loader>
+                )}
+                {!loading && users && users.length > 0
                   ? users.map(user => (
                       // eslint-disable-next-line
                       <Grid.Column width={4} key={user._id}>
@@ -103,7 +136,7 @@ class BloodGroupsPage extends React.Component {
                             marginBottom: "10px"
                           }}
                           as={Link}
-                          to="/profile#"
+                          to={`/profile/${user.username}`}
                         >
                           <Card.Content>
                             <Image
@@ -140,7 +173,7 @@ class BloodGroupsPage extends React.Component {
                         </Card>
                       </Grid.Column>
                     ))
-                  : "No users!"}
+                  : !loading && !error && "No users!"}
               </Grid.Row>
             </Grid>
           </Grid.Column>

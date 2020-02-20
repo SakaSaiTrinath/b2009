@@ -9,56 +9,58 @@ const router = express.Router();
 router.post("/", (req, res) => {
 	const { credentials } = req.body;
 	User.findOne({ username: credentials.username }).then(user => {
-		 if(user && user.isValidPassword(credentials.password)) {
-			res.json({ user: user.toAuthJSON() });
+		if (user && user.isValidPassword(credentials.password)) {
+			if (!user.isNotJoined()) {
+				User.findOneAndUpdate(
+					{ username: credentials.username },
+					{ isJoined: true }
+				).then(() => {
+					res.json({ user: user.toAuthJSON() });
+				});
+			} else {
+				res.json({ user: user.toAuthJSON() });
+			}
 		} else {
 			res.status(400).json({ errors: { global: "Invalid Credentials" } });
-		} 
-	});
-});
-
-router.get("/", (req, res) => {
-	User.find({}).then(res => {
-		console.log(res);
+		}
 	});
 });
 
 router.put("/resetusername", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const newusername = req.body.data.username;
-	User.findOneAndUpdate(
-		{ username }, 
-		{ username: newusername }
-	).then(user => {
-		res.json({ 
-			user: {
-				username: newusername,
-				token: user.generateJWT(newusername)
-			} 
+	User.findOneAndUpdate({ username }, { username: newusername })
+		.then(user => {
+			res.json({
+				user: {
+					username: newusername,
+					token: user.generateJWT(newusername)
+				}
+			});
+		})
+		.catch(err => {
+			res.status(400).json({ errors: { global: err } });
 		});
-	})
-	.catch(err => {
-		console.log(err);
-		res.status(400).json({ errors: { global: err } });
-	})
 });
 
 router.put("/resetPassword", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const { current_password, new_password } = req.body.data;
 	User.findOne({ username }).then(user => {
-		 if(user && user.isValidPassword(current_password)) {
+		if (user && user.isValidPassword(current_password)) {
 			User.findOneAndUpdate(
 				{ username },
 				{ passwordHash: bcrypt.hashSync(new_password, 10) }
-			).then(() => {
-				res.json({ message: "password successfully changed!" });
-			}).catch(err => {
-				res.status(400).json({ errors: { global: err } });
-			})
+			)
+				.then(() => {
+					res.json({ message: "password successfully changed!" });
+				})
+				.catch(err => {
+					res.status(400).json({ errors: { global: err } });
+				});
 		} else {
 			res.status(400).json({ errors: { global: "Invalid current password!" } });
-		} 
+		}
 	});
 });
 
