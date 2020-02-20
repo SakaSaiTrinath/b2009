@@ -14,7 +14,7 @@ import {
 } from "semantic-ui-react";
 
 import RatingCommenting from "./RatingCommenting";
-import Dev from "../images/my pic.jpg";
+// import Dev from "../images/my pic.jpg";
 import LOGO from "../images/icon.png";
 
 class ArticlePageMobile extends Component {
@@ -43,11 +43,7 @@ class ArticlePageMobile extends Component {
 								pushing
 								offset={window.innerHeight - 50}
 							>
-								<Label
-									color="teal"
-									onClick={this.props.goBack}
-									size="big"
-								>
+								<Label color="teal" onClick={this.props.goBack} size="big">
 									<Icon name="chevron left" />
 									Back
 								</Label>
@@ -118,23 +114,16 @@ class ArticlePageMobile extends Component {
 								<Item.Group>
 									<Item>
 										<Item.Content>
-											<Item.Image src={Dev} size="tiny" />
+											{/* <Item.Image src={Dev} size="tiny" /> */}
 
 											<Item.Content>
-												<Item.Header>
-													{"Saka Sai Trinath"}
-												</Item.Header>
+												<Item.Header>{"Saka Sai Trinath"}</Item.Header>
 												<Item.Meta>
-													{
-														"Studying BTech Computer Science at LPU in Punjab"
-													}
+													{"Studying BTech Computer Science at LPU in Punjab"}
 												</Item.Meta>
 												<Item.Extra>
 													<Label>
-														Articles{" "}
-														<Label.Detail>
-															10
-														</Label.Detail>
+														Articles <Label.Detail>10</Label.Detail>
 													</Label>
 												</Item.Extra>
 											</Item.Content>

@@ -1,8 +1,8 @@
-/* This tab is not added in the website */
+/*/* This tab is not added in the website 
 
 import React from "react";
 import { Card, Responsive } from "semantic-ui-react";
-import gImg from "../images/my pic.jpg";
+// import gImg from "../images/my pic.jpg";
 
 class GalleryPanel extends React.Component {
 	state = {};
@@ -53,3 +53,4 @@ class GalleryPanel extends React.Component {
 }
 
 export default GalleryPanel;
+*/

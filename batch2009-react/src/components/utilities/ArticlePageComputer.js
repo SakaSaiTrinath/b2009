@@ -14,21 +14,14 @@ import {
 import { NavLink } from "react-router-dom";
 
 import RatingCommenting from "./RatingCommenting";
-import Dev from "../images/my pic.jpg";
+// import Dev from "../images/my pic.jpg";
 import LOGO from "../images/icon.png";
 
 class ArticlePageComputer extends Component {
 	state = {};
 
 	render() {
-		const {
-			title,
-			date,
-			labels,
-			content,
-			rating,
-			NoOfRatings
-		} = this.props;
+		const { title, date, labels, content, rating, NoOfRatings } = this.props;
 
 		const menuStyle = {
 			border: "none",
@@ -45,21 +38,16 @@ class ArticlePageComputer extends Component {
 					<Grid.Column>
 						<Item.Group>
 							<Item>
-								<Item.Image src={Dev} size="tiny" />
+								{/* <Item.Image src={Dev} size="tiny" /> */}
 
 								<Item.Content>
-									<Item.Header>
-										{"Saka Sai Trinath"}
-									</Item.Header>
+									<Item.Header>{"Saka Sai Trinath"}</Item.Header>
 									<Item.Meta>
-										{
-											"Studying BTech Computer Science at LPU in Punjab"
-										}
+										{"Studying BTech Computer Science at LPU in Punjab"}
 									</Item.Meta>
 									<Item.Extra>
 										<Label>
-											Articles{" "}
-											<Label.Detail>10</Label.Detail>
+											Articles <Label.Detail>10</Label.Detail>
 										</Label>
 									</Item.Extra>
 								</Item.Content>

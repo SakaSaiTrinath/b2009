@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import {
 	Header,
-	Image,
+	// Image,
 	Dropdown,
 	Segment,
 	Label,
 	Icon
 } from "semantic-ui-react";
-import BImg from "../images/my pic.jpg";
+// import BImg from "../images/my pic.jpg";
 import EditArticle from "../modals/EditArticle";
 
 class Article extends React.Component {
@@ -36,8 +36,7 @@ class Article extends React.Component {
 		// If user given, this won't be updated but if he is giving for the first time, it will update.
 		const newNoOfRatings = this.props.NoOfRatings + 1;
 		let newRating =
-			(this.props.rating * this.props.NoOfRatings + rating) /
-			newNoOfRatings;
+			(this.props.rating * this.props.NoOfRatings + rating) / newNoOfRatings;
 		newRating = newRating.toFixed(2);
 		this.props.SetRating(this.props.id, newRating, newNoOfRatings);
 		// If user has already given the rating, just update the rating of article with newRating (calculated one)
@@ -60,7 +59,7 @@ class Article extends React.Component {
 				<Segment.Group>
 					<Segment color="teal">
 						<Header>
-							<Image avatar src={BImg} /> Saka Sai Trinath
+							{/* <Image avatar src={BImg} /> Saka Sai Trinath */}
 							<Header floated="right" as="h4">
 								{fromPage === "FeedPage" && (
 									<Dropdown className="icon">
@@ -82,20 +81,12 @@ class Article extends React.Component {
 										</Dropdown.Menu>
 									</Dropdown>
 								)}
-								<EditArticle
-									open={this.state.open}
-									onClose={this.onClose}
-								/>
+								<EditArticle open={this.state.open} onClose={this.onClose} />
 							</Header>
 						</Header>
 						<div>
 							{labels.map(label => (
-								<Label
-									size="mini"
-									as="a"
-									color="teal"
-									key={label}
-								>
+								<Label size="mini" as="a" color="teal" key={label}>
 									{label}
 								</Label>
 							))}
@@ -113,8 +104,7 @@ class Article extends React.Component {
 					</Segment.Group>
 
 					<Segment stacked>
-						<Icon name="star" color="yellow" /> {rating} (
-						{NoOfRatings} ratings)
+						<Icon name="star" color="yellow" /> {rating} ({NoOfRatings} ratings)
 					</Segment>
 				</Segment.Group>
 			</div>
