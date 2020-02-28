@@ -10,6 +10,8 @@ export default {
 	user: {
 		login: credentials =>
 			axios.post("/api/auth", { credentials }).then(res => res.data.user),
+		verifyToken: () =>
+			axios.post("/api/auth/verifyToken").then(res => res.data.user),
 		resetUsername: data =>
 			axios.put("/api/auth/resetusername", { data }).then(res => res.data.user),
 		resetPassword: data =>

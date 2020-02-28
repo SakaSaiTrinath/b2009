@@ -17,35 +17,11 @@ router.post("/", authenticate, (req, res) => {
   });
 });
 
-router.get("/temp", authenticate, (req, res) => {
+router.get("/", authenticate, (req, res) => {
   Announcement.find({}, { title: 1, content: 1, date: 1 }).then(anns => {
     res.json({ announcements: anns });
   });
 });
-
-/* router.get("/", authenticate, (req, res) => {
-  const { limit, max_id, isFirst } = req.query;
-  let q1;
-  let q2;
-  const limitx = limit || 10;
-  q1 = max_id ? { _id: max_id } : {};
-  Announcement.findOne(q1).then(ann => {
-    const max_date = ann.date;
-    if (max_date && isFirst === "true") {
-      q2 = { date: { $lte: max_date } };
-    } else if(max_date) {
-      q2 = { date: { $lt: max_date } };
-    } else {
-      q2 = {};
-    }
-    Announcement.find(q2, { title: 1, content: 1, date: 1 })
-      .sort("-date")
-      .limit(parseInt(limitx, 10))
-      .then(anns => {
-        res.json({ announcements: anns });
-      });
-  });
-}); */
 
 router.get("/", authenticate, (req, res) => {
   const { limit, max_id } = req.query;

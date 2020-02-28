@@ -40,6 +40,7 @@ const mapNumberToMonth = number => {
 class EditBasicInfoForm extends Component {
 	state = {
 		data: {
+			fullname: this.props.fullname,
 			nick_name: this.props.nick_name,
 			date: "",
 			birthdate: this.props.birthdate,
@@ -98,6 +99,7 @@ class EditBasicInfoForm extends Component {
 
 	render() {
 		const {
+			fullname,
 			nick_name,
 			date,
 			gender,
@@ -150,6 +152,15 @@ class EditBasicInfoForm extends Component {
 
 		return (
 			<Form loading={loading}>
+				<Form.Input
+					label="Full Name"
+					value={fullname}
+					onChange={this.handleDataChange}
+					name="fullname"
+					error={!!errors.nick_name}
+				/>
+				{errors.fullname && <InlineError text={errors.fullname} />}
+
 				<Form.Input
 					label="Nick Name"
 					value={nick_name}
@@ -298,12 +309,13 @@ function mapStateToProps(state) {
 }
 
 EditBasicInfoForm.defaultProps = {
+	fullname: "",
 	nick_name: "",
 	birthmonth: "",
 	birthdate: "",
 	gender: "",
 	rel_status: "",
-	phone_number: null,
+	phone_number: undefined,
 	home_address: "",
 	blood_group: "",
 	known_lang: "",
@@ -316,6 +328,7 @@ EditBasicInfoForm.propTypes = {
 	updateState: PropTypes.func.isRequired,
 	errors: PropTypes.shape({
 		nick_name: PropTypes.string,
+		fullname: PropTypes.string,
 		gender: PropTypes.string,
 		rel_status: PropTypes.string,
 		phone_number: PropTypes.number,
@@ -326,6 +339,7 @@ EditBasicInfoForm.propTypes = {
 		hobbies: PropTypes.string,
 		goal: PropTypes.string
 	}).isRequired,
+	fullname: PropTypes.string,
 	nick_name: PropTypes.string,
 	birthmonth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	birthdate: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

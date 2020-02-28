@@ -49,11 +49,13 @@ class EditBasicInfo extends Component {
 
 	validate = data => {
 		const errors = {};
+		if (!data.fullname) errors.fullname = "Please provide fullname!";
 		// if (!data.nick_name) errors.nick_name = "Please provide nick name or fill ---";
 		// if (!data.rel_status) errors.rel_status = "Please provide this info or fill ---";
-		// if (!data.phone_number) errors.phone_number = "Phone number needed.";
+		if (data.phone_number && data.phone_number.length < 10)
+			errors.phone_number = "Please provide correct phone number!";
 		// if (!data.home_address) errors.home_address = "Please provide address or fill ---";
-		if (!data.blood_group) errors.blood_group = "Please provide blood group";
+		if (!data.blood_group) errors.blood_group = "Please provide blood group!";
 		// if (!data.known_lang) errors.known_lang = "Please provide this info or fill ---";
 		// if (!data.zodiac) errors.zodiac = "Please provide zodiac or fill ---";
 		// if (!data.hobbies) errors.hobbies = "Please provide hobbies or fill ---";

@@ -134,6 +134,7 @@ router.get("/fetchBasicInfo/:username", authenticate, (req, res) => {
 router.post("/updateBasicInfo", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const {
+		fullname,
 		birthmonth,
 		birthdate,
 		blood_group,
@@ -152,6 +153,7 @@ router.post("/updateBasicInfo", authenticate, (req, res) => {
 	User.findOneAndUpdate(
 		{ username },
 		{
+			fullname,
 			birthmonth,
 			birthdate,
 			blood_group,
@@ -169,7 +171,7 @@ router.post("/updateBasicInfo", authenticate, (req, res) => {
 	).then(user => {
 		res.json({
 			basic_info: {
-				fullname: user.fullname,
+				fullname,
 				profile_pic: user.profile_pic,
 				current_status: user.current_status,
 				current_location: user.current_location,

@@ -1,0 +1,26 @@
+{
+  "name": "b2009",
+  "version": "1.0.0",
+  "description": "This is a website using MERN for my old schoolmates batch to update their current status, their info, their slam info, ability to create articles, view others and much more.",
+  "main": "index.js",
+  "scripts": {
+    "build": "concurrently \"cd batch2009-react && yarn build\" \"cd batch2009-api && yarn build\"",
+    "install": "(cd batch2009-api && yarn) && (cd batch2009-react && yarn)",
+    "start": "concurrently \"cd batch2009-react && PORT=3000 yarn start\" \"cd batch2009-api && PORT=8080 yarn start\"",
+    "start:prod": "cd batch2009-api && yarn start:prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SakaSaiTrinath/b2009.git"
+  },
+  "keywords": [],
+  "author": "SakaSaiTrinath",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SakaSaiTrinath/b2009/issues"
+  },
+  "homepage": "https://github.com/SakaSaiTrinath/b2009#readme",
+  "dependencies": {
+    "concurrently": "^5.1.0"
+  }
+}

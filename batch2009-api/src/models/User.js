@@ -6,6 +6,7 @@ const schema = new mongoose.Schema({
 	username: { type: String, required: true, index: true, unique: true },
 	passwordHash: { type: String, required: true },
 	isJoined: { type: Boolean, default: false },
+	last_logged_in: { type: Date },
 
 	// basic info
 	profile_pic: { type: String },

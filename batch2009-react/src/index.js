@@ -11,6 +11,7 @@ import rootReducer from "./rootReducer";
 import { userLoggedIn } from "./actions/auth";
 import registerServiceWorker from "./registerServiceWorker";
 import setAuthorizationHeader from "./utils/setAuthorizationHeader";
+import api from "./api";
 
 const store = createStore(
 	rootReducer,
@@ -19,8 +20,15 @@ const store = createStore(
 
 if (localStorage.batch2009) {
 	const user = JSON.parse(localStorage.batch2009);
-	setAuthorizationHeader(user.token);
-	store.dispatch(userLoggedIn(user));
+	if (user) {
+		const promise = Promise.resolve(setAuthorizationHeader(user.token));
+		promise.then(() => {
+			api.user.verifyToken().then(user_ => {
+				store.dispatch(userLoggedIn(user_));
+				setAuthorizationHeader(user_.token);
+			});
+		});
+	}
 }
 
 ReactDOM.render(

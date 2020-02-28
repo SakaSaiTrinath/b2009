@@ -26,6 +26,14 @@ router.post("/", (req, res) => {
 	});
 });
 
+router.post("/verifyToken", authenticate, (req, res) => {
+	const { username } = req.currentUser;
+	User.findOneAndUpdate({ username }, { last_logged_in: Date() }).then(user => {
+		console.log(Date());
+		res.json({ user: user.toAuthJSON() });
+	});
+});
+
 router.put("/resetusername", authenticate, (req, res) => {
 	const { username } = req.currentUser;
 	const newusername = req.body.data.username;

@@ -1,6 +1,6 @@
+import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
-import path from "path";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
@@ -19,16 +19,21 @@ mongoose.connect(process.env.MONGODB_URL, {
   useCreateIndex: true
 });
 
+app.use(express.static(path.join(__dirname, "../../public/uploads")));
+app.use(express.static(path.join(__dirname, "../../../batch2009-react/build")));
+
 app.use("/api/auth", auth);
 app.use("/api/ann", ann);
 app.use("/api/users", users);
 app.use("/api/locations", locations);
+app.use(express.static(path.join(__dirname, "../public/uploads")));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+app.get("/*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../../batch2009-react/build/index.html")
+  );
 });
 
-app.use(express.static(path.join(__dirname, "../public/uploads")));
 app.set("port", process.env.PORT || 8080);
 
 app.listen(app.get("port"), () => {
