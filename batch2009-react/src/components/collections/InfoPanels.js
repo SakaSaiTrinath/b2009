@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Menu, Segment, Responsive, Button, Dropdown } from "semantic-ui-react";
+import { Menu, Segment, Responsive, Dropdown } from "semantic-ui-react";
 import BasicInfoPanel from "./BasicInfoPanel";
 import SchoolInfoPanel from "./SchoolInfoPanel";
 import AfterNavodayaPanel from "./AfterNavodayaPanel";
@@ -16,60 +16,60 @@ import { fetchAllUsers } from "../../actions/other";
 
 const routes = [
 	{
-		id: BasicInfoPanel,
-		path: "/myprofile/basic",
-		exact: true,
-		component: BasicInfoPanel,
+		// id: BasicInfoPanel,
+		// path: "/myprofile/basic",
+		// exact: true,
+		// component: BasicInfoPanel,
 		key: "BasicInfo",
 		icon: "info",
 		text: "Basic Info",
 		value: "basic"
 	},
 	{
-		id: SchoolInfoPanel,
-		path: "/myprofile/school",
-		exact: true,
-		component: SchoolInfoPanel,
+		// id: SchoolInfoPanel,
+		// path: "/myprofile/school",
+		// exact: true,
+		// component: SchoolInfoPanel,
 		key: "SchoolInfo",
 		icon: "university",
 		text: "School Info",
 		value: "school"
 	},
 	{
-		id: AfterNavodayaPanel,
-		path: "/myprofile/afternavodaya",
-		exact: true,
-		component: AfterNavodayaPanel,
+		// id: AfterNavodayaPanel,
+		// path: "/myprofile/afternavodaya",
+		// exact: true,
+		// component: AfterNavodayaPanel,
 		key: "AfterNavodaya",
 		icon: "wait",
 		text: "After Navodaya",
 		value: "afternavodaya"
 	},
 	{
-		id: SocialAccountsPanel,
-		path: "/myprofile/social",
-		exact: true,
-		component: SocialAccountsPanel,
+		// id: SocialAccountsPanel,
+		// path: "/myprofile/social",
+		// exact: true,
+		// component: SocialAccountsPanel,
 		key: "SocialAccounts",
 		icon: "at",
 		text: "Social Accounts",
 		value: "social"
 	},
 	{
-		id: FavouritesPanel,
-		path: "/myprofile/favorites",
-		exact: true,
-		component: FavouritesPanel,
+		// id: FavouritesPanel,
+		// path: "/myprofile/favorites",
+		// exact: true,
+		// component: FavouritesPanel,
 		key: "Favourites",
 		icon: "favorite",
 		text: "Favourites",
 		value: "favourites"
 	},
 	{
-		id: FirstThingsPanel,
-		path: "/myprofile/firstthings",
-		exact: true,
-		component: FirstThingsPanel,
+		// id: FirstThingsPanel,
+		// path: "/myprofile/firstthings",
+		// exact: true,
+		// component: FirstThingsPanel,
 		key: "FirstThings",
 		icon: "first order",
 		text: "First Things",
@@ -259,14 +259,13 @@ class InfoPanels extends Component {
 				</Responsive>
 
 				<Responsive {...Responsive.onlyMobile}>
-					<Button.Group color="teal" attached="top">
-						<Button>Tabs</Button>
+					{/* <Menu compact>
 						<Dropdown
-							button
-							floating
-							openOnFocus
+							fluid
+							selection
 							className="icon"
-							defaultValue="BasicInfo"
+							defaultValue="basic"
+							value={this.state.activeItem}
 						>
 							<Dropdown.Menu>
 								{routes.map(route => (
@@ -280,8 +279,18 @@ class InfoPanels extends Component {
 								))}
 							</Dropdown.Menu>
 						</Dropdown>
-					</Button.Group>
-					<div attached="bottom" style={{ marginTop: "10px" }}>
+					</Menu> */}
+					<Menu>
+						<Dropdown
+							fluid
+							selection
+							className="icon"
+							value={this.state.activeItem}
+							onChange={this.handleChange}
+							options={routes}
+						/>
+					</Menu>
+					<div style={{ marginTop: "10px" }}>
 						{this.returnSwitch(activeItem)}
 					</div>
 				</Responsive>

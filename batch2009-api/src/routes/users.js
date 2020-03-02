@@ -1,8 +1,6 @@
 import express from "express";
 import multer from "multer";
-// import path from "path";
 import fs from "fs";
-// import { map } from "p-iteration";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
@@ -677,7 +675,8 @@ router.get("/fetchAllUsers", authenticate, (req, res) => {
 router.get("/fetchAllUsersFull", authenticate, (req, res) => {
 	User.find(
 		{},
-		"isJoined profile_pic fullname current_status studied_from_year studied_to_year current_location gender birthmonth birthdate blood_group username"
+		"isJoined profile_pic fullname current_status studied_from_year studied_to_year current_location gender birthmonth birthdate blood_group username",
+		{ sort: { fullname: 1 } }
 	).then(users => {
 		res.json({ all_users: users });
 	});
@@ -686,19 +685,6 @@ router.get("/fetchAllUsersFull", authenticate, (req, res) => {
 router.post("/sendUserResponse", authenticate, (req, res) => {
 	const { username, fullname } = req.currentUser;
 	const { type, title, message } = req.body;
-	/* const obj = {
-		message_type,
-		title,
-		message,
-		timestamp: Date.now()
-	};
-	User.findOneAndUpdate({ username }, { $push: { responses: obj } })
-		.then(() => {
-			res.json({ success: true });
-		})
-		.catch(err => {
-			res.status(400).json({ success: false, message: err });
-		}); */
 	const mailOptions = {
 		from: "b2009-app@gmail.com",
 		to: "sst.trinadh@gmail.com",

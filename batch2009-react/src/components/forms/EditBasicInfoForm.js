@@ -43,7 +43,7 @@ class EditBasicInfoForm extends Component {
 			fullname: this.props.fullname,
 			nick_name: this.props.nick_name,
 			date: "",
-			birthdate: this.props.birthdate,
+			birthdate: this.props.birthdate || undefined,
 			birthmonth: this.props.birthmonth,
 			gender: this.props.gender,
 			phone_number: this.props.phone_number,
@@ -201,7 +201,7 @@ class EditBasicInfoForm extends Component {
 				<Form.Input
 					label="Phone Number"
 					type="number"
-					value={phone_number}
+					value={phone_number || ""}
 					name="phone_number"
 					onChange={this.handleDataChange}
 					error={!!errors.phone_number}
@@ -312,10 +312,10 @@ EditBasicInfoForm.defaultProps = {
 	fullname: "",
 	nick_name: "",
 	birthmonth: "",
-	birthdate: "",
+	birthdate: undefined,
 	gender: "",
 	rel_status: "",
-	phone_number: undefined,
+	phone_number: "",
 	home_address: "",
 	blood_group: "",
 	known_lang: "",

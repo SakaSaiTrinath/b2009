@@ -399,7 +399,7 @@ SocialAccountsPanel.propTypes = {
 	// social_accounts_rejected_list: PropTypes.arrayOf(PropTypes.string),
 	fetchSocialAccInfo: PropTypes.func.isRequired,
 	social_accounts: PropTypes.shape({}),
-	updateSocialVisibilty: PropTypes.func.isRequired,
+	// updateSocialVisibilty: PropTypes.func.isRequired,
 	user_username: PropTypes.string.isRequired
 };
 
